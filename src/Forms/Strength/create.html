@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibreGainz</title>
+</head>
+<body>
+
+<h3>Add Strength Workout</h3>
+
+    <input id="setRepsInput" type="text" placeholder="Reps"/>
+    <p>x</p>
+    <input id="setWeightInput" type="text" placeholder="Weight"/>
+    
+        <label for="Lb">lb</label>
+        <input type="radio" id="Lb" value="lb" name="weight">
+
+        <label for="Kg">kg</label>
+        <input type="radio" id="Kg" value="kg" name="weight">
+
+    <br>
+    <br>
+    <button onclick="setAddItem()" style="background-color: yellow;">Add Strength Workout</button> 
+    <div id ="setItems">
+    </div>
+
+    <h6>(Optional) Todays Goal:</h6>
+    <progress id="progressBar" value="0" max="50"></progress>
+
+
+    <script src="create.js"></script>
+
+</body>
+</html>
