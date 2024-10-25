@@ -43,7 +43,7 @@ const recordLap = () => { // recordLap function
 
     const lapDisplay = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}`;
     const lapElement = document.createElement("li");
-    lapElement.innerHTML = `Lap: ${lapDisplay} <button class="delete-lap">Delete</button>`;
+    lapElement.innerHTML = `Lap: ${lapDisplay} <button class="delete-lap">Delete Lap</button>`;
     
     lapElement.querySelector(".delete-lap").addEventListener("click", () => {
         lapsContainer.removeChild(lapElement);
