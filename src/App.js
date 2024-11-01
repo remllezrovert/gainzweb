@@ -25,6 +25,7 @@ const App = () => {
     const user = AuthService.getCurrentUser();
 
     if (user) {
+          user.roles = user.roles || ["user"]; // Set default role if none exist
       setCurrentUser(user);
       setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
       setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));

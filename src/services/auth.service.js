@@ -1,4 +1,6 @@
 import axios from "axios";
+import {jwtDecode} from "jwt-decode";
+import ClientRepo from "../repo/ClientRepo";
 
 //const API_URL = "http://localhost:3000/api/auth/";
 const API_URL = "http://remllez.com:8081/auth/";
@@ -11,20 +13,55 @@ const register = (username, email, password) => {
   });
 };
 
+//const login = (email, password) => {
+//  return axios
+//    .post(API_URL + "login", {
+//      email,
+//      password,
+//    })
+//    .then((response) => {
+//      if (response.data.user) { //changed from username
+//        localStorage.setItem("user", JSON.stringify(response.data));
+//      }
+//
+//      return response.data;
+//    });
+//};
+
 const login = (email, password) => {
   return axios
-    .post(API_URL + "login", {
-      email,
-      password,
-    })
+    .post(API_URL + "login", { email, password })
     .then((response) => {
-      if (response.data.username) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+      if (response.data.token) {
+        const user = jwtDecode(response.data.token);
+          user.roles = user.roles || ["user"]; // Set to ["user"] if roles are undefined
+          user.email = user.sub;
+          user.token = response.data.token;
+          
+        localStorage.setItem("user", JSON.stringify({
+          token: response.data.token,
+          expiresIn: response.data.expiresIn,
+          ...user 
+        }));
+
+
+
+
       }
 
       return response.data;
+    })
+    .catch((error) => {
+      console.error("Login error:", error);
+      throw error; 
     });
 };
+
+
+
+
+
+
 
 const logout = () => {
   localStorage.removeItem("user");
