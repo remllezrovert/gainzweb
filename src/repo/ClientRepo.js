@@ -1,20 +1,10 @@
 import axios from "axios";
+import AuthService from "../services/auth.service";
 
 const API_URL = "http://remllez.com:8081/client/";
 
 const getMe = async () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  if (!user || !user.token) {
-    throw new Error("User is not authenticated");
-  }
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  };
-
+  const config = AuthService.getHeaderConfig();
   try {
     const response = await axios.get(`${API_URL}me`, config);
     return response.data;

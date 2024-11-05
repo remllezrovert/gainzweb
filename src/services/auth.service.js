@@ -74,11 +74,32 @@ const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
 
+
+
+
+
+const getHeaderConfig = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user || !user.token) {
+    throw new Error("User is not authenticated");
+  }
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+  return config;
+}
+
+
+
 const AuthService = {
   register,
   login,
   logout,
   getCurrentUser,
+  getHeaderConfig
 }
 
 export default AuthService;
