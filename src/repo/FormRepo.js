@@ -1,13 +1,19 @@
 import axios from "axios";
 import AuthService from "../services/auth.service";
 
-const API_URL = "http://remllez.com:8081/form/";
+
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_URL = `${API_BASE_URL}/form`;
+
+
+
 
 const getAll = async () => {
   const config = AuthService.getHeaderConfig(); 
 
   try {
-    const response = await axios.get(`${API_URL}`, config);
+    const response = await axios.get(`${API_URL}/`, config);
     return response.data;
   } catch (error) {
     console.error("Error fetching form data:", error);
