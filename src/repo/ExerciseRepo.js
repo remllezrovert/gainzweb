@@ -1,13 +1,14 @@
 import axios from "axios";
 import AuthService from "../services/auth.service";
 
-const API_URL = "http://remllez.com:8081/exercise/";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_URL = `${API_BASE_URL}/exercise`;
 
 const getAll = async () => {
   const config = AuthService.getHeaderConfig(); 
 
   try {
-    const response = await axios.get(`${API_URL}`, config);
+    const response = await axios.get(`${API_URL}/`, config);
     return response.data;
   } catch (error) {
     console.error("Error fetching exercise data:", error);
@@ -20,13 +21,36 @@ const getAll = async () => {
 const getById= async (exerciseId) => {
   const config = AuthService.getHeaderConfig(); 
   try {
-    const response = await axios.get(`${API_URL}/` + `${exerciseId}/`, config);
+    const response = await axios.get(`${API_URL}/${exerciseId}/`, config);
     return response.data;
   } catch (error) {
     console.error("Error fetching exercise data:", error);
     throw error;
   }
 };
+
+
+
+const getByDateRange = async (clientId, startDate, endDate, limit) => {
+  const config = AuthService.getHeaderConfig(); 
+  try {
+    const response = await axios.get(`${API_BASE_URL}${clientId}/exercise/date`, {
+      params: {
+        startDate: startDate,  // Format the date ('YYYY-MM-DD') java.sql.date
+        endDate: endDate,
+        limit: limit
+      },
+      ...config // Add auth headers
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching exercise data by date range:", error);
+    throw error;
+  }
+};
+
+
 
 
 const postRequest = async (exercise) => {
@@ -72,6 +96,7 @@ const deleteRequest= async (exerciseId) => {
 const ExerciseRepo = {
   getAll,
   getById,
+  getByDateRange,
   postRequest,
   patchRequest,
   deleteRequest
