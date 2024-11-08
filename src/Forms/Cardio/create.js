@@ -1,11 +1,12 @@
 
 let stopwatch = document.getElementById("stopwatch");
 let lapsContainer = document.getElementById("Laps"); 
-let secondsElapsed = 0;
+let hundrethsElapsed = 0; // Variable to keep track of seconds passed
+let lastLapTime = 0; // Variable to keep track of the last lap time 
 let interval = null;
 
 function stopwatchTimer() {
-    secondsElapsed++;
+    hundrethsElapsed++;
     setStopwatch()
 }
 
@@ -14,34 +15,40 @@ const padStart = (value) => {
 }
 
 function setStopwatch(){
-    let hours = Math.floor(secondsElapsed / 3600)
-    let minutes = Math.floor((secondsElapsed % 3600) / 60)
-    let seconds = secondsElapsed % 60;
+    let totalHundreths = hundrethsElapsed; // total hundreths of a second elapsed
+    
+    let hours = Math.floor(totalHundreths / 360000)
+    let minutes = Math.floor((totalHundreths % 36000) / 6000)
+    let seconds = Math.floor((totalHundreths % 6000) / 100);
+    let hundreths = totalHundreths % 100; // Get the remainder as hundreths of a second
 
-    let displayTime = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}`;
+    let displayTime = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}.${String(hundreths).padStart(2, '0')}`;
     stopwatch.innerHTML = displayTime;
 }
 
 function startStopwatch(){
     if (interval) stopStopwatch()
-        interval = setInterval(stopwatchTimer, 1000)
+        interval = setInterval(stopwatchTimer, 10)
 }
 const stopStopwatch = () => {
     clearInterval(interval)
 }
 const resetStopwatch = () => {
     stopStopwatch()
-    secondsElapsed = 0
+    hundrethsElapsed = 0
+    lastLapTime = 0
     setStopwatch()
+    lapsContainer.innerHTML = "";
 }
 
 const recordLap = () => { // recordLap function 
-    const lapTime = secondsElapsed;
-    const hours = Math.floor(lapTime / 3600);
-    const minutes = Math.floor((lapTime % 3600) / 60);
-    const seconds = lapTime % 60;
+    const lapTime = hundrethsElapsed - lastLapTime;
+    const hours = Math.floor(lapTime / 360000);
+    const minutes = Math.floor((lapTime % 360000) / 6000);
+    const seconds = Math.floor((lapTime % 6000) / 100);
+    const hundreths = hundrethsElapsed % 100;
 
-    const lapDisplay = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}`;
+    const lapDisplay = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}.${String(hundreths).padStart(2, '0')}`;
     const lapElement = document.createElement("li");
     lapElement.innerHTML = `Lap: ${lapDisplay} <button class="delete-lap">Delete Lap</button>`;
     
@@ -50,15 +57,7 @@ const recordLap = () => { // recordLap function
     });
     
     lapsContainer.appendChild(lapElement);
-}
-
-//timer stuff
-function setTimer(){
-    hours = Math.floor(secondsElapsed / 3600)
-    minutes = Math.floor(secondsElapsed / 60)
-    seconds = Math.floor(secondsElapsed % 60)
-    displayTime = `${padStart(hours)}: ${padStart(minutes)}: ${padStart(seconds)}`;
-    stopwatch.innerHTML = displayTime;
+    lastLapTime = secondsElapsed;
 }
 
 

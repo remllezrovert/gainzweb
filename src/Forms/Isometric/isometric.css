@@ -1,0 +1,47 @@
+body {
+    background: linear-gradient(135deg, #d3d35c, #d7dfe4); /* Light gradient background */
+    font-family: Arial, sans-serif; /* Modern font */
+}
+
+button {
+    background-color: rgb(221, 33, 33);
+    color: white; 
+    border: none; 
+    padding: 8px 14px; 
+    cursor: pointer; 
+    margin-left: 10px;
+    border-radius: 5px; 
+    font-size: 10px; 
+}
+
+/* Start Button Styles */
+.start-button {
+    background-color: rgb(33, 167, 9); 
+}
+
+.start-button:hover {
+    background-color: darkgreen; 
+}
+
+/* Stop Button Styles */
+.stop-button {
+    background-color: rgb(187, 19, 19);
+}
+
+.stop-button:hover {
+    background-color: #d32f2f; 
+}
+
+button:hover {
+    background-color: #d32f2f;
+}
+
+li {
+    margin: 10px 0; 
+    font-size: .8em; 
+}
+
+#workoutHistory {
+    list-style-type: none; 
+    padding-left: 0; 
+}

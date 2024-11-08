@@ -58,13 +58,13 @@ function setAddItem(){
 
 setWeightInput.addEventListener("keypress", function(event) { // When textbox is selected, enter key will start setAddItem() function
     if (event.key === "Enter") {
-        setAddItem(); // Trigger function when button is pressed
+        setAddItem(); // Trigger function when enter button is pressed
     }
 });
 
 setRepsInput.addEventListener("keypress", function(event) { // When textbox is selected, enter key will start setAddItem() function
     if (event.key === "Enter") {
-        setAddItem(); // Trigger function when button is pressed
+        setAddItem(); // Trigger function when enter button is pressed
     }
 });
 

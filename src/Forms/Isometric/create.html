@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isometric Workout</title>
+    <link rel="stylesheet" href="isometric.css">
+</head>
+<body>
+
+    <h3>Isometric Workout</h3>
+        <input id="weightInput" type="text" placeholder="Weight"/>
+    
+        <label for="Lb">lb</label>
+        <input type="radio" id="Lb" value="lb" name="weight">
+
+        <label for="Kg">kg</label>
+        <input type="radio" id="Kg" value="kg" name="weight">
+
+
+    <h1 id ="stopwatch">00:00:00:00</h1>
+
+    <button class="start-button" onclick="startStopwatch()">Start</button>
+    <button class="stop-button" onclick="stopStopwatch()">Stop</button>
+    
+    <h4>Workouts:</h4>
+    <ul id="workoutHistory"></ul> <!--Container for completed workouts-->
+
+    <script src="create.js"></script>
+    
+</body>
+</html>
