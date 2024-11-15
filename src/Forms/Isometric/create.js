@@ -35,8 +35,6 @@ function validateInputs() {
         return false;
     }
 
-    
-
     return true;
         
  }
@@ -147,6 +145,7 @@ weightTypeInput.addEventListener("keypress", function(event) { // When textbox i
         }
     }
 });
+
 
 
 

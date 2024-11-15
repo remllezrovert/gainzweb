@@ -1,10 +1,10 @@
 body {
-    background: linear-gradient(135deg, #d3d35c, #d7dfe4); /* Light gradient background */
+    background: linear-gradient(135deg, #5ca7d3, #d7dfe4); /* Light gradient background */
     font-family: Arial, sans-serif; /* Modern font */
 }
 
 button {
-    background-color: rgb(221, 33, 33);
+    background-color: rgb(125, 117, 117);
     color: white; 
     border: none; 
     padding: 8px 14px; 
@@ -20,7 +20,7 @@ button {
 }
 
 .start-button:hover {
-    background-color: darkgreen; 
+    background-color: rgb(6, 116, 6); 
 }
 
 /* Stop Button Styles */
@@ -33,7 +33,8 @@ button {
 }
 
 button:hover {
-    background-color: #d32f2f;
+    background-color: #dba30c;
+    color: black;
 }
 
 li {
