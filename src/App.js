@@ -12,6 +12,7 @@ import Profile from "./components/Profile";
 import BoardUser from "./components/BoardUser";
 import BoardModerator from "./components/BoardModerator";
 import BoardAdmin from "./components/BoardAdmin";
+import Verification from "./components/Verification";
 
 // import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
@@ -107,10 +108,18 @@ const App = () => {
             </li>
 
             <li className="nav-item">
+              <Link to={"/Verification"} className="nav-link">
+                Varify
+              </Link>
+            </li>
+
+            <li className="nav-item">
               <Link to={"/register"} className="nav-link">
                 Sign Up
               </Link>
             </li>
+
+            
           </div>
         )}
       </nav>
@@ -125,6 +134,7 @@ const App = () => {
           <Route path="/user" element={<BoardUser />} />
           <Route path="/mod" element={<BoardModerator />} />
           <Route path="/admin" element={<BoardAdmin />} />
+          <Route path ="/verification" element={<Verification/>} />
         </Routes>
       </div>
 
