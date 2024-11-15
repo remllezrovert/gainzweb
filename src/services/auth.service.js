@@ -10,6 +10,17 @@ const register = (username, email, password) => {
     username,
     email,
     password,
+  })
+  .then(response => {
+    // Registration successful, store the email in localStorage
+    localStorage.setItem("email", email);
+    //console.log(email)
+    return response.data;
+  })
+  .catch(error => {
+    // Handle registration error if needed
+    console.error("Registration error:", error);
+    throw error;
   });
 };
 
@@ -57,6 +68,21 @@ const login = (email, password) => {
     });
 };
 
+const verify = (email, verificationCode) => {
+  return axios
+    .post(API_URL + "verify", { email, verificationCode })
+    .then((response) => {
+      // Handle the response as needed
+      // For example, you might store the user data if verification logs the user in
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Verification error:", error);
+      throw error;
+    });
+};
+
+
 
 
 
@@ -97,6 +123,7 @@ const getHeaderConfig = () => {
 const AuthService = {
   register,
   login,
+  verify,
   logout,
   getCurrentUser,
   getHeaderConfig
