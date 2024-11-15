@@ -9,19 +9,22 @@
 
 <h3>Strength Workout</h3>
 
+<form id="WorkoutForm">
     <input id="setRepsInput" type="text" placeholder="Reps"/>
     <p>x</p>
     <input id="setWeightInput" type="text" placeholder="Weight"/>
     
-        <label for="Lb">lb</label>
-        <input type="radio" id="Lb" value="lb" name="weight">
+    <label for="Lb">lb</label>
+    <input type="radio" id="Lb" value="lb" name="weight">
 
-        <label for="Kg">kg</label>
-        <input type="radio" id="Kg" value="kg" name="weight">
+    <label for="Kg">kg</label>
+    <input type="radio" id="Kg" value="kg" name="weight">
+    <br><br>
 
-    <br>
-    <br>
-    <button onclick="setAddItem()" style="background-color: yellow;">Add Strength Workout</button> 
+    <button type="button" onclick="setAddItem()" style="background-color: yellow;">Add Strength Workout</button> 
+    <button type="submit">Submit Workout</button><br>
+</form>
+
     <div id ="setItems">
     </div>
 
