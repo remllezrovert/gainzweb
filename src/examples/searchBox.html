@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Autocomplete - Template Example</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <style>
+    #template-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 1em;
+    }
+    #template-summary {
+      margin: 0;
+      padding: 0;
+      font-style: italic;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+  <script>
+  $(function() {
+    var templates = [
+      {
+        title: "BenchPress",
+        id: 0,
+        dataType: "STRENGTH",
+        formId: 0,
+        summary: "Barbell bench press"
+      },
+      {
+        title: "Runnin",
+        id: 1,
+        dataType: "CARDIO",
+        formId: 1,
+        summary: "Run Forest run."
+      },
+      {
+        title: "Eating",
+        id: 2,
+        dataType: "ISOMETRIC",
+        formId: 2,
+        summary: "Effective weight loss method."
+      }
+    ];
+
+    $("#template").autocomplete({
+      minLength: 0,
+      source: templates,
+      focus: function(event, ui) {
+        $("#template").val(ui.item.title); // Set the input to the title on focus
+        return false;
+      },
+      select: function(event, ui) {
+        $("#template").val(ui.item.title); // Set the input to the title on select
+        $("#template-id").val(ui.item.title); // Store the template title in a hidden input
+        $("#template-summary").html(ui.item.summary); // Display the summary
+        console.log("Selected Template: ", ui.item);
+
+        // Clear the input field after selection
+        $("#template").val('');
+        
+        return false;
+      }
+    })
+    .autocomplete("instance")._renderItem = function(ul, item) {
+      return $("<li>")
+        .append("<div>" + item.title + "<br>" + item.summary + "</div>")
+        .appendTo(ul);
+    };
+  });
+  </script>
+</head>
+<body>
+
+  <div id="template-label">Select a template (type "r" for a start):</div>
+  <input id="template">
+  <input type="hidden" id="template-id">
+  <p id="template-summary"></p>
+
+</body>
+</html>
