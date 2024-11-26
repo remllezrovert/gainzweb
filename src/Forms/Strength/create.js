@@ -1,3 +1,4 @@
+ import Exercise from "../../model/Exercise.js";
 
 const setWeightInput = document.getElementById("setWeightInput");
 const setRepsInput = document.getElementById("setRepsInput");
@@ -45,7 +46,6 @@ function setAddItem(){
     }
 
     const workoutEntry = `${value2}x${value} ${weightUnit.value}`; // combines the two values into one string
-    // NOTE: ask trevor about if he wants the values to be combined into an entry or changed into different entries
     setItems.push(workoutEntry);
     
     setRenderItems()
@@ -54,6 +54,7 @@ function setAddItem(){
     setSaveItems()
     setRepsInput.focus(); // When workout added, cursor goes back to reps textbox for next input automatically
 }
+window.setAddItem = setAddItem;
 
 setWeightInput.addEventListener("keypress", function(event) { // When textbox is selected, enter key will start setAddItem() function
     if (event.key === "Enter") {
@@ -76,99 +77,78 @@ function setRemoveItem(idx){
 }
 document.addEventListener("DOMContentLoaded", setLoadItems)
 
-class Excercise {
-    constructor() {
-        this.id = 0;
-        this.clientId = 0;
-        this.templateId = 0;
-        this.date = "";
-        this.dataMap = {};
-    }
-
-    // Getters
-    get getId() {
-        return this.id;
-    }
-    get getClientId() {
-        return this.clientId;
-    }
-    get getTemplateId() {
-        return this.templateId;
-    }
-    get getDate() {
-        return this.date;
-    }
-    get getDataMap() {
-        return this.dataMap;
-    }
-
-    // Setters
-    set setId(id) {
-        this.id = id;
-    }
-    set setClientId(clientId) {
-        this.clientId = clientId;
-    }
-    set setTemplateId(templateId) {
-        this.templateId = templateId;
-    }
-    setDate() {
-        const today = new Date();
-        this.date = today.toISOString().split('T')[0]; // Format to YYYY-MM-DD
-    }
-    setDataMap(content) {
-        this.dataMap = { content };
-    }
-}
-
-// Function for form submission and creating excercise object
-function submitExcercise() {
+// Function for form submission and creating exercise object
+function submitExercise() {
     event.preventDefault();
-    // Create a new excercise Instance
-    const newExcercise = new Excercise();
 
-    // Set the date using setDate method
-    newExcercise.setDate();
+    let exerciseId = Math.floor(Math.random() * 100000);  //  random exercise ID generation
 
-    newExcercise.setId = 0;
-    newExcercise.setClientId = 0;
-    newExcercise.setTemplateId = 0;
+    // Create a new Exercise instance
+    const myExercise = new Exercise();
 
-    // datamap based on example
+    // Set the date to today's date in YYYY-MM-DD format
+    const today = new Date();
+    myExercise.setDate(today.toISOString().split('T')[0]); // Format date
+
+    // Set additional Exercise properties
+    myExercise.setId(exerciseId);
+    myExercise.setClientId(0);
+    myExercise.setTemplateId(0);
+
     const dataMapContent = {};
 
     for (const setItem of setItems) {
-        // keeps reps and weight apart
+        // Parse set item into reps, weight, and unit
         const [reps, weightAndUnit] = setItem.split('x');
-        // keeps weight and unita apart
         const [weight, unit] = weightAndUnit.trim().split(' ');
-        // creates a key combining weight and unit of weight
-        const key = `${weight} ${unit}`;
-        // converts to integer
+        const key = `${weight}${unit}`;
         const repsValue = parseInt(reps, 10);
-        
-        // if key does not exist already creates new array underneath of new weight to organize reps
+
+        // Organize reps under the appropriate weight/unit key
         if (!dataMapContent[key]) {
             dataMapContent[key] = [];
+        }
+        dataMapContent[key].push(repsValue);
     }
-    // add repsValue to array 
-    dataMapContent[key].push(repsValue);
+
+    // Convert the reps arrays into comma-separated strings
+    for (let key in dataMapContent) {
+        dataMapContent[key] = dataMapContent[key].join(',');
     }
 
-    // add dataMap to excercise object
-    newExcercise.dataMap = { content : dataMapContent };
-    
+    // Assign dataMap to the Exercise object
+    myExercise.dataMap = { content: dataMapContent };
 
-    // Convert excercise object to a JSON string
-    const jsonOutput = JSON.stringify(newExcercise, (key, value) => {
-        return Array.isArray(value) ? JSON.stringify(value).replace(/[\[\]]/g, '') : value;
-    }, 2).replace(/\"\[/g, '[').replace(/\]\"/g, ']');
+    let key = `e${exerciseId}`;  // Key format: e1
 
-    // print JSON string out to console in browser (right-click and hit 'inspect')
-    console.log(jsonOutput);
+    // Log the exercise object to the console
+    console.log(myExercise);
+
+    // save the exercise to localStorage with the unique key
+    localStorage.setItem(key, JSON.stringify(myExercise));
+
+    // used to retrieve the exercise from localStorage
+    let storedExercise = JSON.parse(localStorage.getItem(key));
+
+    // generate the JSON output
+    const jsonOutput = JSON.stringify(
+        {
+            id: myExercise.getId(),
+            clientId: myExercise.getClientId(),
+            templateId: myExercise.getTemplateId(),
+            date: myExercise.getDate(),
+            dataMap: {
+                content: dataMapContent,
+            },
+        },
+        null,
+        2
+    );
+console.log(jsonOutput);
 }
+
 // submits workout form
 document.getElementById("WorkoutForm").addEventListener("submit", function(event) {
     event.preventDefault()
-    submitExcercise();
+    submitExercise();
 });
