@@ -57,5 +57,4 @@ class Exercise {
       this.date = date;
     }
   }
-  
-  
+  export default Exercise;
