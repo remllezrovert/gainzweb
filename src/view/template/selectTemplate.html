@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Autocomplete - Search Templates</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+  <style>
+    #template-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 1em;
+    }
+    #template-description {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+  <script type="module" src="selectTemplate.js"></script> <!-- Link to the external JS file -->
+</head>
+<body>
+  <div id="template-label">Search templates:</div>
+  <input id="template">
+  <input type="hidden" id="template-id">
+  <p id="template-description"></p>
+
+  <script type="module" src="selectTemplate.js"></script> <!-- Link to the external JS file -->
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Autocomplete - Form Example</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <style>
+    #form-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 1em;
+    }
+    #form-id {
+      font-style: italic;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+  <script type="module" src="selectForm.js"></script>
+</head>
+<body>
+
+  <div id="form-label">Search forms: </div>
+  <input id="form-title" placeholder="Type to search...">
+  <input type="hidden" id="form-id">
+  <p>Selected Form ID: <span id="display-form-id"></span></p>
+
+</body>
+</html>
