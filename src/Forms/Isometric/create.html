@@ -9,27 +9,28 @@
 <body>
 
     <h3>Isometric Workout</h3>
-        <input id="weightInput" type="text" placeholder="Weight"/>
     
+    <form id="workoutForm">
+        <input id="weightInput" type="text" placeholder="Weight" required/>
+        
         <label for="Lb">lb</label>
         <input type="radio" id="Lb" value="lb" name="weight">
 
         <label for="Kg">kg</label>
         <input type="radio" id="Kg" value="kg" name="weight">
+        
+        <h1 id="stopwatch">00:00:00:00</h1>
 
+        <button id="start-button" class="start-button" type="button" onclick="startStopwatch()">Start</button>
+        <button id="stop-button" class="stop-button" type="button" onclick="stopStopwatch()">Stop</button>
+        
+        <h4>Workouts:</h4>
+        <ul id="workoutHistory"></ul> <!-- Container for completed workouts -->
 
-    <h1 id ="stopwatch">00:00:00:00</h1>
+        <button class="submitWorkoutBtn" type="button">Submit Workout</button>
+    </form>
 
-    <button class="start-button" onclick="startStopwatch()">Start</button>
-    <button class="stop-button" onclick="stopStopwatch()">Stop</button>
-    
-    <h4>Workouts:</h4>
-    <ul id="workoutHistory"></ul> <!--Container for completed workouts-->
-
-    <!--Button work submitting workout form-->
-    <button type="submit">Submit Workout</button>
-
-    <script src="create.js"></script>
+    <script type="module" src="create.js"></script>
     
 </body>
 </html>

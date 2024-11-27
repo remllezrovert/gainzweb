@@ -1,153 +1,179 @@
+import Exercise from "../../model/Exercise.js"; // Import Exercise class for workout data handling
 
 let stopwatch = document.getElementById("stopwatch");
-let weightTypeInput = document.getElementById("weightInput");
-let workoutHistory = document.getElementById("workoutHistory");
-
-let hundrethsElapsed = 0; // Variable to keep track of seconds passed
+let hundrethsElapsed = 0; // Variable to keep track of hundredths of a second
 let interval = null;
+let timerRunning = false; // Track if the timer is running
 
+// Function to start the stopwatch timer
 function stopwatchTimer() {
     hundrethsElapsed++;
-    setStopwatch()
+    setStopwatch();
 }
 
-const padStart = (value) => {
-    return String(value).padStart(2,"0")
-}
+const padStart = (value) => String(value).padStart(2, "0");
 
-function validateInputs() {
-    const weightType = weightTypeInput.value.trim();
-    const weightUnit = document.querySelector('input[name="weight"]:checked');
+function setStopwatch() {
+    let totalHundreths = hundrethsElapsed; // Total hundredths of a second elapsed
 
-    if (weightType === "" && !weightUnit) {
-        alert("Please fill out the Isometric workout.")
-        weightTypeInput.focus();
-        return false;
-    }
-    if (weightType === "") {
-        alert("Please enter a weight value.");
-        weightTypeInput.focus();
-        return false;
-    }
-
-    if (!weightUnit) {
-        alert("Please select a weight unit.");
-        return false;
-    }
-
-    return true;
-        
- }
-
-function setStopwatch(){
-    let totalHundreths = hundrethsElapsed; // total hundreths of a second elapsed
-    
-    let hours = Math.floor(totalHundreths / 360000)
-    let minutes = Math.floor((totalHundreths % 36000) / 6000)
+    let hours = Math.floor(totalHundreths / 360000);
+    let minutes = Math.floor((totalHundreths % 360000) / 6000);
     let seconds = Math.floor((totalHundreths % 6000) / 100);
-    let hundreths = totalHundreths % 100; // Get the remainder as hundreths of a second
+    let hundreths = totalHundreths % 100; // Get the remainder as hundredths of a second
 
-    let displayTime;
-    if (totalHundreths < 6000) {
-        // If less than a minute display timer as only showing seconds
-        displayTime = `${padStart(seconds)}.${String(hundreths).padStart(2, '0')}`;
-    } else if (totalHundreths < 360000) {
-        // if less than a hour display timer as showing only minutes
-        displayTime = `${padStart(minutes)}:${padStart(seconds)}.${String(hundreths).padStart(2, '0')}`;
-    } else {
-        // display full timer of hours:minutes:seconds:hundreths of seconds
-        displayTime = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}.${String(hundreths).padStart(2, '0')}`;
-    }
-
+    let displayTime = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}.${String(hundreths).padStart(2, '0')}`;
     stopwatch.innerHTML = displayTime;
 }
 
-function startStopwatch(){
-    
-    if(!validateInputs()) return;
-        
-    if (interval) stopStopwatch();
-    interval = setInterval(stopwatchTimer, 10);
-}
-
-const stopStopwatch = () => {
-    clearInterval(interval)
-    interval = null;
-    addWorkout(hundrethsElapsed);
-    resetStopwatch();
-}
-const resetStopwatch = () => {
-    interval = null;
-    hundrethsElapsed = 0
-    setStopwatch()
-}
-
-function addWorkout() {
-    if (!validateInputs()) return;
-
-    const weightType = weightTypeInput.value.trim();
-    const weightUnit = document.querySelector('input[name="weight"]:checked'); // grab selected radio button
-    
-    if (weightType === "") {
-        alert("Please enter a weight type.")
-        weightTypeInput.focus();
-        return;
-    }
-
+// Function to start the stopwatch
+function startStopwatch() {
+    const weightUnit = getSelectedWeightUnit();
     if (!weightUnit) {
-        alert("Please select a weight unit.");
-        return;
+        alert("Please select a weight unit (lb or kg) before starting the timer.");
+        return; // Exit if no weight unit is selected
     }
 
-    const hours = Math.floor(hundrethsElapsed / 360000);
-    const minutes = Math.floor((hundrethsElapsed % 360000) / 6000);
-    const seconds = Math.floor((hundrethsElapsed % 6000) / 100);
-    const hundreths = hundrethsElapsed % 100;
+    if (!interval) {
+        interval = setInterval(stopwatchTimer, 10); // Start the stopwatch
+        timerRunning = true;
+    }
+}
 
-    let workoutTime;
+// Function to stop the stopwatch
+function stopStopwatch() {
+    clearInterval(interval);
+    interval = null;
+    timerRunning = false;
+    addToWorkoutHistory(); // Add to workout history when the stopwatch is stopped
+    resetStopwatch(); // Reset the stopwatch after adding the workout
+}
 
-    if (hundrethsElapsed < 6000) {
-        // If less than a minute display timer as only showing seconds
-        workoutTime = `${padStart(seconds)}.${String(hundreths).padStart(2, '0')} second(s)`;
-    } else if (hundrethsElapsed < 360000) {
-        // if less than a hour display timer as showing only minutes
-        workoutTime = `${padStart(minutes)}:${padStart(seconds)} minute(s)`;
-    } else {
-        // display full timer of hours:minutes:seconds:hundreths of seconds
-        workoutTime = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}.${String(hundreths).padStart(2, '0')} hours`;
+// Function to add workout to the history
+function addToWorkoutHistory() {
+    const hours = Math.floor(hundrethsElapsed / 360000); // Calculate hours from hundredths
+    const minutes = Math.floor((hundrethsElapsed % 360000) / 6000); // Calculate minutes from hundredths
+    const seconds = Math.floor((hundrethsElapsed % 6000) / 100); // Calculate seconds from hundredths
+    const hundreths = hundrethsElapsed % 100; // Remainder is hundredths
+
+    const workoutTime = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}.${String(hundreths).padStart(2, '0')}`;
+
+    if (workoutTime !== "00:00:00.00") {
+        let weight = document.getElementById("weightInput").value; // Get weight from textbox
+        let weightUnit = getSelectedWeightUnit(); // Get the selected weight unit
+
+        if (!weightUnit || !weight) return; // Exit if no weight or weight unit is selected
+
+        // Add to the history list
+        let workoutListItem = document.createElement("li");
+        workoutListItem.textContent = `${weight} ${weightUnit} for ${workoutTime}`;
+        document.getElementById("workoutHistory").appendChild(workoutListItem);
+    }
+}
+
+// Function to get the selected weight unit (either "lb" or "kg")
+function getSelectedWeightUnit() {
+    const weightRadioButtons = document.querySelectorAll('input[name="weight"]');
+    let selectedUnit = null;
+
+    for (let i = 0; i < weightRadioButtons.length; i++) {
+        if (weightRadioButtons[i].checked) {
+            selectedUnit = weightRadioButtons[i].value;
+            break;
+        }
     }
 
-    const workoutEntry = document.createElement("li");
-    workoutEntry.textContent = `${weightType} ${weightUnit.value} for ${workoutTime}`;
+    return selectedUnit;
+}
 
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Delete";
+// Function to reset stopwatch
+function resetStopwatch() {
+    hundrethsElapsed = 0;
+    setStopwatch();
+    timerRunning = false; // Reset the flag
+}
 
-    deleteButton.addEventListener("click", () => {
-        if (confirm("Are you sure you want to delete this workout?")) {
-            workoutHistory.removeChild(workoutEntry);
+// Attach resetStopwatch function to the global scope
+window.resetStopwatch = resetStopwatch;
+
+// Function to generate JSON output and store workout data
+const submitWorkout = () => {
+    // Create a new Exercise instance
+    let myExercise = new Exercise();
+
+    // Get the weight unit and validate
+    let weightUnit = getSelectedWeightUnit();
+    if (!weightUnit) return; // Don't proceed if no weight unit is selected
+
+    // Create a map for the workout history organized by weight
+    let workoutHistoryMap = {};
+    const historyItems = document.getElementById("workoutHistory").getElementsByTagName("li");
+
+    // Loop through each history item to organize by weight
+    for (let i = 0; i < historyItems.length; i++) {
+        let item = historyItems[i].textContent.trim().split(' '); // Trim to avoid leading/trailing spaces
+        let weight = item[0] + item[1]; // This will be the weight (e.g., "20 lb")
+
+        // Ensure we're extracting the correct time format (after the 'for' part)
+        let time = item.slice(3).join(" "); // Get the time part (skip 'for' and the weight)
+
+        // Only add to the map if the time is valid (not empty or "00:00:00.00")
+        if (time && time !== "00:00:00.00") {
+            if (!workoutHistoryMap[weight]) {
+                workoutHistoryMap[weight] = [];
+            }
+            workoutHistoryMap[weight].push(time); // Store each time as an individual entry in an array
+        }
+    }
+
+    // Populate the dataMap with the workout history
+    let contentMap = {};
+    for (let weight in workoutHistoryMap) {
+        let times = workoutHistoryMap[weight].join(", "); // Join times for the same weight
+        contentMap[weight] = times; // Store in the content map under the weight
+    }
+    myExercise.setData("content", contentMap); // Set content data in the main dataMap
+
+    // Set additional properties on myExercise
+    myExercise.setDate(new Date().toISOString().split('T')[0]); // Current date in YYYY-MM-DD format
+
+    // Generate random exerciseId and assign it to the Exercise object
+    let exerciseId = Math.floor(Math.random() * 100000); // Generate a random exerciseId (e.g., 78)
+    myExercise.setId(exerciseId); // Assuming Exercise has a setId method
+
+    // Convert the Map to a plain object before storing in localStorage
+    let exerciseData = {
+        ...myExercise,
+        id: exerciseId,
+        dataMap: Object.fromEntries(myExercise.getAllData()) // Convert Map to object
+    };
+
+    // Save to localStorage
+    let key = `e${exerciseId}`; 
+    localStorage.setItem(key, JSON.stringify(exerciseData)); // Save exercise data in localStorage
+
+    let storedExercise = JSON.parse(localStorage.getItem(key)); // Retrieve the exercise from localStorage
+    console.log(storedExercise); // Log the exercise stored in localStorage
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    const startButton = document.getElementById("start-button");
+    const stopButton = document.getElementById("stop-button");
+
+    startButton.addEventListener("click", startStopwatch);
+    stopButton.addEventListener("click", stopStopwatch);
+
+    // Ensure "Enter" key starts or stops the stopwatch
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Prevent form submission
+            if (timerRunning) {
+                stopStopwatch(); // Stop the stopwatch
+            } else {
+                startStopwatch(); // Start the stopwatch
+            }
         }
     });
-    
-    workoutEntry.appendChild(deleteButton);
-    workoutHistory.appendChild(workoutEntry);
 
-    weightTypeInput.value = ""; // Clear input for next entry
-    weightTypeInput.focus(); //Adds cursor back to workout box to start next workout quicker
-}
-
-weightTypeInput.addEventListener("keypress", function(event) { // When textbox is selected, enter key will start setAddItem() function
-    if (event.key === "Enter") {
-        if (interval) {
-            stopStopwatch();
-        } else {
-            startStopwatch();
-        }
-    }
+    document.querySelector(".submitWorkoutBtn").addEventListener("click", submitWorkout);
 });
-
-
-
-
-
-
+window.submitWorkout = submitWorkout;
