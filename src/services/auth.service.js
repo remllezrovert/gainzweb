@@ -48,7 +48,6 @@ const login = (email, password) => {
           user.roles = user.roles || ["user"]; // Set to ["user"] if roles are undefined
           user.email = user.sub;
           user.token = response.data.token;
-          
         localStorage.setItem("user", JSON.stringify({
           token: response.data.token,
           expiresIn: response.data.expiresIn,

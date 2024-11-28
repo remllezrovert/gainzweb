@@ -85,9 +85,12 @@ const Home = () => {
   return (
     <div className="container">
       <header className="jumbotron">
-        <ExerciseRead />
         <h3>{content}</h3>
       </header>
+        <div>
+        <ExerciseRead/>
+        </div>
+
       <TemplateSearch templates={demoTemplates} onSelect={handleTemplateSelect} /> {/* Pass the demo templates */}
       {/* Render the dynamically imported HTML */}
       <div dangerouslySetInnerHTML={{ __html: htmlContent }} />

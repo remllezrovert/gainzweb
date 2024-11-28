@@ -35,6 +35,8 @@ const Profile = () => {
     return <div className="container"><h1>Please log in</h1></div>;
   }
 
+  localStorage.setItem("userData", JSON.stringify(userData, null, 2));
+
   return (
     <div className="container">
       <header className="jumbotron">

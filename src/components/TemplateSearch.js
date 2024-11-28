@@ -3,6 +3,12 @@ import $ from "jquery";
 import "jquery-ui/ui/widgets/autocomplete";
 import "jquery-ui/themes/base/all.css";
 
+// A utility function for case-insensitive matching
+const matchString = (str, query) => {
+  const regex = new RegExp(query, "i"); // case-insensitive match
+  return regex.test(str);
+};
+
 const TemplateSearch = ({ templates, onSelect }) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -10,11 +16,11 @@ const TemplateSearch = ({ templates, onSelect }) => {
 
   useEffect(() => {
     $(inputRef.current).autocomplete({
-      minLength: 0,
+      minLength: 1,
       source: function (request, response) {
         const matches = templates
           .filter((template) =>
-            template.title.toLowerCase().includes(request.term.toLowerCase())
+            matchString(template.title, request.term)
           )
           .map((template) => ({
             label: template.title,

@@ -147,13 +147,22 @@ const submitLaps = async () => {
         return;
     }
 
+    const currentUser = JSON.parse(localStorage.getItem("userData"));
+    if (currentUser){
+        myExercise.setClientId(currentUser.id);
+    } else {
+        console.error("No clientId found in localStorage.");
+        return;
+    }
+
+
 
 
     // Save to IndexedDB
     try {
         await saveToIndexedDB(exerciseId, {
             id: exerciseId,
-            clientId: 0, // Default client ID
+            clientId: currentUser.id, // Default client ID
             templateId: selectedTemplateId, // Default template ID
             date: myExercise.getDate(),
             dataMap: dataMap,

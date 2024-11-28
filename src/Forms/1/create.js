@@ -114,6 +114,15 @@ async function submitExercise(event) {
         return;
     }
 
+
+    const currentUser = JSON.parse(localStorage.getItem("userData"));
+    if (currentUser){
+        myExercise.setClientId(currentUser.id);
+    } else {
+        console.error("No clientId found in localStorage.");
+        return;
+    }
+
     const dataMapContent = {};
 
     for (const setItem of setItems) {
