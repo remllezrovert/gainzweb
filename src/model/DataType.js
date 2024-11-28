@@ -7,4 +7,4 @@ const DataType = Object.freeze({
   });
   
  
-  
+ export default DataType; 

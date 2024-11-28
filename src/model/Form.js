@@ -1,8 +1,23 @@
 class Form {
-    constructor(id, content) {
+
+    constructor(id, content,title) {
         this._id = id;
         this._content = content; 
+        this._title = title;
     }
+
+    get title(){
+        return this._title;
+    }
+
+    set title(value){
+        if (typeof value === 'string'){
+            this._title = value;
+        } else {
+            throw new Error("title must be a string");
+        }
+    }
+
 
     get id() {
         return this._id;
@@ -37,3 +52,5 @@ class Form {
         this._content = btoa(String.fromCharCode.apply(null, byteArray));
     }
 }
+
+export default Form;

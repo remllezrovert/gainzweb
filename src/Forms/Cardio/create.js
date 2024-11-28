@@ -1,4 +1,6 @@
-import Exercise from "../../model/Exercise.js";  // Import Exercise class for workout data handling
+import { Exercise } from '/model/Exercise.js'; // or
+import Exercise from '/model/Exercise.js';
+
 
 let stopwatch = document.getElementById("stopwatch");
 let lapsContainer = document.getElementById("Laps");

@@ -1,57 +1,57 @@
- import Exercise from "../../model/Exercise.js";
+import Exercise from "../../model/Exercise.js";
 
 const setWeightInput = document.getElementById("setWeightInput");
 const setRepsInput = document.getElementById("setRepsInput");
 const setItemsDiv = document.getElementById("setItems");
 
 let setItems = [];
-const storageKey = "setItems"
+const storageKey = "setItems";
 
-function setLoadItems(){
+function setLoadItems() {
     const oldItems = localStorage.getItem(storageKey);
-    if (oldItems) setItems=JSON.parse(oldItems);
+    if (oldItems) setItems = JSON.parse(oldItems);
     setRenderItems();
 }
 
 function setRenderItems() {
-    setItemsDiv.innerHTML= null;
+    setItemsDiv.innerHTML = null;
     for (const [idx, setItem] of Object.entries(setItems)) {
-        const container = document.createElement("div")
-        container.style.marginBottom = "10px"
-        const text = document.createElement("p") 
-        text.style.display = "inline"
-        text.style.marginLeft= "10px"
+        const container = document.createElement("div");
+        container.style.marginBottom = "10px";
+        const text = document.createElement("p");
+        text.style.display = "inline";
+        text.style.marginLeft = "10px";
         text.textContent = setItem;
-        const button = document.createElement("button")
-        button.textContent = "Delete Workout" 
+        const button = document.createElement("button");
+        button.textContent = "Delete Workout";
         button.onclick = () => setRemoveItem(idx);
-        container.appendChild(button)
-        container.appendChild(text)
-        setItemsDiv.appendChild(container)
+        container.appendChild(button);
+        container.appendChild(text);
+        setItemsDiv.appendChild(container);
     }
 }
 
-function setSaveItems(){
+function setSaveItems() {
     const stringItems = JSON.stringify(setItems);
     localStorage.setItem(storageKey, stringItems);
 }
 
-function setAddItem(){
+function setAddItem() {
     const value = setWeightInput.value;
     const value2 = setRepsInput.value;
     const weightUnit = document.querySelector('input[name="weight"]:checked'); // grab selected radio button
     if ((!value || !value2) || !weightUnit) { // if no radio button is selected, or no value is inputted throw alert
-        alert("you cannot add an empty workout")
-        return
+        alert("you cannot add an empty workout");
+        return;
     }
 
     const workoutEntry = `${value2}x${value} ${weightUnit.value}`; // combines the two values into one string
     setItems.push(workoutEntry);
-    
-    setRenderItems()
+
+    setRenderItems();
     localStorage.setItem('lastSelectedUnit', weightUnit.id);
-    setRepsInput.value = ""  // sets textbox to blank after entry is submitted
-    setSaveItems()
+    setRepsInput.value = "";  // sets textbox to blank after entry is submitted
+    setSaveItems();
     setRepsInput.focus(); // When workout added, cursor goes back to reps textbox for next input automatically
 }
 window.setAddItem = setAddItem;
@@ -70,18 +70,18 @@ setRepsInput.addEventListener("keypress", function(event) { // When textbox is s
     }
 });
 
-function setRemoveItem(idx){
-    setItems.splice(idx,1)
-    setRenderItems()
-    setSaveItems()
+function setRemoveItem(idx) {
+    setItems.splice(idx, 1);
+    setRenderItems();
+    setSaveItems();
 }
-document.addEventListener("DOMContentLoaded", setLoadItems)
+document.addEventListener("DOMContentLoaded", setLoadItems);
 
 // Function for form submission and creating exercise object
 function submitExercise() {
     event.preventDefault();
 
-    let exerciseId = Math.floor(Math.random() * 100000);  //  random exercise ID generation
+    let exerciseId = Math.floor(Math.random() * 100000);  // random exercise ID generation
 
     // Create a new Exercise instance
     const myExercise = new Exercise();
@@ -144,11 +144,11 @@ function submitExercise() {
         null,
         2
     );
-console.log(jsonOutput);
+    console.log(jsonOutput);
 }
 
 // submits workout form
 document.getElementById("WorkoutForm").addEventListener("submit", function(event) {
-    event.preventDefault()
+    event.preventDefault();
     submitExercise();
 });

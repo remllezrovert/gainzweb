@@ -2,13 +2,26 @@ import React, { useState, useEffect } from "react";
 import AuthService from "../services/auth.service";
 import ClientRepo from "../repo/ClientRepo";
 
+import TemplateCreate from "./TemplateCreate"; // Import the TemplateSearch component
+
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const currentUser = AuthService.getCurrentUser();
 
+  const templates = [
+    { id: 1, title: "ABCD", summary: "Summary for ABCD" },
+    { id: 2, title: "ABDE", summary: "Summary for ABDE" },
+    { id: 3, title: "ACDE", summary: "Summary for ACDE" },
+  ];
+
+
+  const handleTemplateSelect = (template) => {
+    console.log("Selected Template:", template);
+  };
+
   useEffect(() => {
     if (currentUser && currentUser.token) {
-      ClientRepo.getMe(currentUser.token) 
+      ClientRepo.getMe(currentUser.token)
         .then((data) => {
           setUserData(data);
         })
@@ -53,9 +66,10 @@ const Profile = () => {
       ) : (
         <div>Loading additional user data...</div>
       )}
+      <TemplateCreate/>
+
     </div>
   );
 };
-
 
 export default Profile;
