@@ -86,6 +86,14 @@ function setRemoveItem(idx) {
 }
 document.addEventListener("DOMContentLoaded", setLoadItems);
 
+
+
+
+
+
+
+
+
 async function submitExercise(event) {
     event.preventDefault();
 
@@ -96,7 +104,15 @@ async function submitExercise(event) {
     myExercise.setDate(today.toISOString().split("T")[0]);
     myExercise.setId(exerciseId);
     myExercise.setClientId(0);
-    myExercise.setTemplateId(0);
+
+    // Retrieve the selected templateId from localStorage
+    const selectedTemplateId = localStorage.getItem("selectedTemplateId");
+    if (selectedTemplateId) {
+        myExercise.setTemplateId(parseInt(selectedTemplateId, 10)); // Ensure the templateId is a number
+    } else {
+        console.error("No templateId found in localStorage. Please select a template.");
+        return;
+    }
 
     const dataMapContent = {};
 
@@ -137,5 +153,6 @@ async function submitExercise(event) {
 
     console.log("Workout submitted!");
 }
+
 
 document.getElementById("WorkoutForm").addEventListener("submit", submitExercise);

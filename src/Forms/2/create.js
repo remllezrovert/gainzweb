@@ -139,12 +139,22 @@ const submitLaps = async () => {
     // Add the remaining properties to the exercise object
     myExercise.setData("dataMap", dataMap);
 
+    const selectedTemplateId = localStorage.getItem("selectedTemplateId");
+    if (selectedTemplateId) {
+        myExercise.setTemplateId(parseInt(selectedTemplateId, 10)); // Ensure the templateId is a number
+    } else {
+        console.error("No templateId found in localStorage. Please select a template.");
+        return;
+    }
+
+
+
+    // Save to IndexedDB
     try {
-        // Save to IndexedDB
         await saveToIndexedDB(exerciseId, {
             id: exerciseId,
             clientId: 0, // Default client ID
-            templateId: 0, // Default template ID
+            templateId: selectedTemplateId, // Default template ID
             date: myExercise.getDate(),
             dataMap: dataMap,
         });

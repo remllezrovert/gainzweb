@@ -71,8 +71,12 @@ const Home = () => {
     const storedTemplate = JSON.parse(localStorage.getItem(`template_${template.id}`));
 
     if (storedTemplate) {
-      console.log("Selected Template from localStorage:", storedTemplate); // Debugging log
-      setFormId(storedTemplate.formId); // Set the formId based on the selected template
+      console.log("Selected Template from localStorage:", storedTemplate);
+      localStorage.setItem("selectedTemplateId", storedTemplate.id);
+      setFormId(storedTemplate.formId);
+
+
+
     } else {
       console.error("Template not found in localStorage for templateId:", template.id); // Debugging log
     }
