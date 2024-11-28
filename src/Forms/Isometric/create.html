@@ -4,31 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Isometric Workout</title>
-    <link rel="stylesheet" href="isometric.css">
 </head>
 <body>
 
     <h3>Isometric Workout</h3>
-    
-    <form id="workoutForm">
-        <input id="weightInput" type="text" placeholder="Weight" required/>
-        
-        <label for="Lb">lb</label>
-        <input type="radio" id="Lb" value="lb" name="weight">
+    <input id="weightInput" type="number" step="0.1" placeholder="Weight" required/>
+    <br>
+    <label for="kg">Kilograms</label>
+    <input type="radio" id="kg" value="kg" name="weight">
+    <br>
+    <label for="lb">Pounds</label>
+    <input type="radio" id="lb" value="lb" name="weight">    
 
-        <label for="Kg">kg</label>
-        <input type="radio" id="Kg" value="kg" name="weight">
+    <h1 id="stopwatch">00:00:00:00</h1>
+    <button style="background-color: yellow;" onclick="startStopwatch()">Start</button>
+    <button style="background-color: yellow;" onclick="stopStopwatch()">Stop</button>
+    <button style="background-color: yellow;" onclick="resetStopwatch()">Reset</button>
+    <button id="lapBtn" style="background-color: yellow;" onclick="recordLap()">Lap</button> <!-- Lap Button that runs the recordLap function every time it is clicked -->
         
-        <h1 id="stopwatch">00:00:00:00</h1>
-
-        <button id="start-button" class="start-button" type="button" onclick="startStopwatch()">Start</button>
-        <button id="stop-button" class="stop-button" type="button" onclick="stopStopwatch()">Stop</button>
-        
-        <h4>Workouts:</h4>
-        <ul id="workoutHistory"></ul> <!-- Container for completed workouts -->
-
-        <button class="submitWorkoutBtn" type="button">Submit Workout</button>
-    </form>
+    <h3>Laps:</h3>
+    <ul id="Laps"></ul> <!-- Shows the list of laps -->
+    <button id="submitLapsBtn" style="background-color: green;">Submit Laps</button>
 
     <script type="module" src="create.js"></script>
     

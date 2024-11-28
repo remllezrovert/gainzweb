@@ -16,6 +16,12 @@ import Verification from "./components/Verification";
 
 // import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
+import { initDB } from './services/IndexedDB.js';
+
+// Initialize the database
+initDB()
+    .then(() => console.log("LibreGainzIndexedDB initialized successfully"))
+    .catch((error) => console.error("Failed to initialize LibreGainzIndexedDB:", error));
 
 const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);

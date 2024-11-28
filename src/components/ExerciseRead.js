@@ -41,7 +41,62 @@ const ExerciseRead = ({ storedExArray }) => {
     const sortedExercises = [...exercises].sort((a, b) => new Date(a.date) - new Date(b.date));
 
     return (
-        <div id="exerciseList">
+        <div>
+            <style>
+                {`
+                    body {
+                        margin: 0; /* Remove default margin */
+                        padding: 0; /* Remove default padding */
+                        font-family: Arial, sans-serif;
+                    }
+
+                    .exercise-container {
+                        margin-bottom: 20px;
+                        padding: 15px;
+                        border: 1px solid #ccc;
+                        border-radius: 8px;
+                        background-color: #f9f9f9;
+                    }
+
+                    .exercise-header {
+                        font-size: 18px;
+                        font-weight: bold;
+                        color: #333;
+                        margin-bottom: 10px;
+                    }
+
+                    .label {
+                        font-size: 16px;
+                        font-style: italic;
+                        margin-bottom: 10px;
+                    }
+
+                    .content-list {
+                        list-style-type: none;
+                        padding: 0;
+                    }
+
+                    .content-list li {
+                        padding: 5px 0;
+                    }
+
+                    .delete-button {
+                        margin-top: 10px;
+                        padding: 5px 10px;
+                        font-size: 14px;
+                        background-color: #ff4d4d;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+
+                    .delete-button:hover {
+                        background-color: #ff1a1a;
+                    }
+                `}
+            </style>
+            <h1>Exercises</h1>
             {sortedExercises.map((exercise, index) => (
                 <div key={index} className="exercise-container">
                     {/* Display date as YYYY-MM-DD */}

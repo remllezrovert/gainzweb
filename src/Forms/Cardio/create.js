@@ -1,6 +1,5 @@
-import { Exercise } from '/model/Exercise.js'; // or
-import Exercise from '/model/Exercise.js';
-
+import Exercise from "../../model/Exercise.js"; // Import Exercise class for workout data handling
+import { saveToIndexedDB } from "../../services/IndexedDB.js";
 
 let stopwatch = document.getElementById("stopwatch");
 let lapsContainer = document.getElementById("Laps");
@@ -43,7 +42,7 @@ function startStopwatch() {
     }
 
     if (!interval) {
-        interval = setInterval(stopwatchTimer, 10); // Update timer every 10ms
+        interval = setInterval(stopwatchTimer, 10);
         enableLapBtn();
     }
 }
@@ -101,7 +100,7 @@ function recordLap() {
 }
 
 // Function to submit laps
-const submitLaps = () => {
+const submitLaps = async () => {
     const lapItems = lapsContainer.getElementsByTagName("li");
     if (lapItems.length === 0) {
         alert("No laps to submit.");
@@ -109,7 +108,7 @@ const submitLaps = () => {
     }
 
     // Generate a unique exercise ID
-    let exerciseId = Math.floor(Math.random() * 100000); 
+    let exerciseId = Math.floor(Math.random() * 100000);
     let myExercise = new Exercise();
     myExercise.setId(exerciseId); // Set exercise ID
     myExercise.setClientId(0); // Default client ID
@@ -139,36 +138,42 @@ const submitLaps = () => {
 
     // Add the remaining properties to the exercise object
     myExercise.setData("dataMap", dataMap);
-    myExercise.setDate(new Date().toISOString().split("T")[0]); // Set current date
 
-    // Save the exercise object to localStorage
-    let key = `e${exerciseId}`; // Generate a unique key for the exercise
-    localStorage.setItem(key, JSON.stringify({
+    try {
+        // Save to IndexedDB
+        await saveToIndexedDB(exerciseId, {
+            id: exerciseId,
+            clientId: 0, // Default client ID
+            templateId: 0, // Default template ID
+            date: myExercise.getDate(),
+            dataMap: dataMap,
+        });
+        console.log("Exercise saved to IndexedDB:", myExercise);
+    } catch (error) {
+        console.error("Failed to save exercise to IndexedDB:", error);
+        alert("Failed to save exercise to IndexedDB.");
+    }
+
+    // Save to sessionStorage
+    sessionStorage.setItem(`exercise-${exerciseId}`, JSON.stringify({
         id: exerciseId,
-        clientId: 0, // Default client ID
-        templateId: 0, // Default template ID
         date: myExercise.getDate(),
         dataMap: dataMap,
     }));
 
-    // Optional: Log the Exercise object and the stored data
-    console.log("Exercise object:", myExercise);
-    console.log("Saved to localStorage:", JSON.parse(localStorage.getItem(key)));
+    console.log("Exercise saved to sessionStorage:", sessionStorage.getItem(`exercise-${exerciseId}`));
 
-    // Reset the UI after submission
-    lapsContainer.innerHTML = ""; // Clear laps
-    hundrethsElapsed = 0; // Reset the timer
+    // Reset after submission
+    lapsContainer.innerHTML = "";
+    hundrethsElapsed = 0;
     lastLapTime = 0;
     setStopwatch();
 };
 
-// Attach the event listener for the submit button
-submitLapsBtn.addEventListener("click", submitLaps);
+document.getElementById("submitLapsBtn").addEventListener("click", submitLaps);
 
-// Initially disable the Lap button
 disableLapBtn();
 
-// Expose functions globally for button events
 window.startStopwatch = startStopwatch;
 window.stopStopwatch = stopStopwatch;
 window.resetStopwatch = resetStopwatch;

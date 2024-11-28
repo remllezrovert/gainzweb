@@ -22,12 +22,12 @@ const Home = () => {
 
     const loadHtml = async () => {
       try {
-        const htmlModule = await import("../Forms/Strength/create.html");
+        const htmlModule = await import("../Forms/Isometric/create.html");
         setHtmlContent(htmlModule.default);
 
         const script = document.createElement("script");
         script.textContent = `
-          ${require("../Forms/Strength/create.js").default}
+          ${require("../Forms/Isometric/create.js").default}
         `;
         document.body.appendChild(script);
 

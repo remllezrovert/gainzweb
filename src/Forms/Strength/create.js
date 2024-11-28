@@ -1,16 +1,27 @@
 import Exercise from "../../model/Exercise.js";
+import { saveToIndexedDB, loadFromIndexedDB, deleteFromIndexedDB } from "../../services/IndexedDB.js";
 
 const setWeightInput = document.getElementById("setWeightInput");
 const setRepsInput = document.getElementById("setRepsInput");
 const setItemsDiv = document.getElementById("setItems");
 
 let setItems = [];
-const storageKey = "setItems";
 
+const setItemsKey = "setItems";
+const lastUnitKey = "lastSelectedUnit";
+
+// Load items and render them on page load
 function setLoadItems() {
-    const oldItems = localStorage.getItem(storageKey);
-    if (oldItems) setItems = JSON.parse(oldItems);
+    const oldItems = localStorage.getItem(setItemsKey);
+    if (oldItems) {
+        setItems = JSON.parse(oldItems);
+    }
     setRenderItems();
+
+    const lastUnit = localStorage.getItem(lastUnitKey);
+    if (lastUnit) {
+        document.getElementById(lastUnit).checked = true;
+    }
 }
 
 function setRenderItems() {
@@ -32,41 +43,39 @@ function setRenderItems() {
 }
 
 function setSaveItems() {
-    const stringItems = JSON.stringify(setItems);
-    localStorage.setItem(storageKey, stringItems);
+    localStorage.setItem(setItemsKey, JSON.stringify(setItems));
 }
 
 function setAddItem() {
     const value = setWeightInput.value;
     const value2 = setRepsInput.value;
-    const weightUnit = document.querySelector('input[name="weight"]:checked'); // grab selected radio button
-    if ((!value || !value2) || !weightUnit) { // if no radio button is selected, or no value is inputted throw alert
-        alert("you cannot add an empty workout");
+    const weightUnit = document.querySelector('input[name="weight"]:checked');
+    if ((!value || !value2) || !weightUnit) {
+        alert("You cannot add an empty workout.");
         return;
     }
 
-    const workoutEntry = `${value2}x${value} ${weightUnit.value}`; // combines the two values into one string
+    const workoutEntry = `${value2}x${value} ${weightUnit.value}`;
     setItems.push(workoutEntry);
 
     setRenderItems();
-    localStorage.setItem('lastSelectedUnit', weightUnit.id);
-    setRepsInput.value = "";  // sets textbox to blank after entry is submitted
+    localStorage.setItem(lastUnitKey, weightUnit.id);
+    setRepsInput.value = "";
     setSaveItems();
-    setRepsInput.focus(); // When workout added, cursor goes back to reps textbox for next input automatically
+    setRepsInput.focus();
 }
 window.setAddItem = setAddItem;
 
-setWeightInput.addEventListener("keypress", function(event) { // When textbox is selected, enter key will start setAddItem() function
+setWeightInput.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        setAddItem(); // Trigger function when enter button is pressed
+        setAddItem();
     }
 });
-
-setRepsInput.addEventListener("keypress", function(event) { // When textbox is selected, enter key will start setAddItem() function
+setRepsInput.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        setAddItem(); // Trigger function when enter button is pressed
+        setAddItem();
     }
 });
 
@@ -77,20 +86,14 @@ function setRemoveItem(idx) {
 }
 document.addEventListener("DOMContentLoaded", setLoadItems);
 
-// Function for form submission and creating exercise object
-function submitExercise() {
+async function submitExercise(event) {
     event.preventDefault();
 
-    let exerciseId = Math.floor(Math.random() * 100000);  // random exercise ID generation
+    let exerciseId = Math.floor(Math.random() * 100000);
 
-    // Create a new Exercise instance
-    const myExercise = new Exercise();
-
-    // Set the date to today's date in YYYY-MM-DD format
+    const myExercise = new Exercise(exerciseId);
     const today = new Date();
-    myExercise.setDate(today.toISOString().split('T')[0]); // Format date
-
-    // Set additional Exercise properties
+    myExercise.setDate(today.toISOString().split("T")[0]);
     myExercise.setId(exerciseId);
     myExercise.setClientId(0);
     myExercise.setTemplateId(0);
@@ -98,57 +101,41 @@ function submitExercise() {
     const dataMapContent = {};
 
     for (const setItem of setItems) {
-        // Parse set item into reps, weight, and unit
-        const [reps, weightAndUnit] = setItem.split('x');
-        const [weight, unit] = weightAndUnit.trim().split(' ');
+        const [reps, weightAndUnit] = setItem.split("x");
+        const [weight, unit] = weightAndUnit.trim().split(" ");
         const key = `${weight}${unit}`;
         const repsValue = parseInt(reps, 10);
 
-        // Organize reps under the appropriate weight/unit key
         if (!dataMapContent[key]) {
             dataMapContent[key] = [];
         }
         dataMapContent[key].push(repsValue);
     }
 
-    // Convert the reps arrays into comma-separated strings
     for (let key in dataMapContent) {
-        dataMapContent[key] = dataMapContent[key].join(',');
+        dataMapContent[key] = dataMapContent[key].join(",");
     }
 
-    // Assign dataMap to the Exercise object
     myExercise.dataMap = { content: dataMapContent };
 
-    let key = `e${exerciseId}`;  // Key format: e1
+    // Ensure `id` is assigned to the Exercise object and verify it before saving
+    if (!myExercise.id) {
+        console.error("Exercise object does not have a valid id.");
+        return;
+    }
 
-    // Log the exercise object to the console
-    console.log(myExercise);
+    try {
+        await saveToIndexedDB(myExercise.id, myExercise);
+        console.log("Exercise saved successfully!");
+    } catch (error) {
+        console.error("Failed to save to IndexedDB:", error);
+    }
 
-    // save the exercise to localStorage with the unique key
-    localStorage.setItem(key, JSON.stringify(myExercise));
+    setItems = [];
+    localStorage.removeItem(setItemsKey);
+    setRenderItems();
 
-    // used to retrieve the exercise from localStorage
-    let storedExercise = JSON.parse(localStorage.getItem(key));
-
-    // generate the JSON output
-    const jsonOutput = JSON.stringify(
-        {
-            id: myExercise.getId(),
-            clientId: myExercise.getClientId(),
-            templateId: myExercise.getTemplateId(),
-            date: myExercise.getDate(),
-            dataMap: {
-                content: dataMapContent,
-            },
-        },
-        null,
-        2
-    );
-    console.log(jsonOutput);
+    console.log("Workout submitted!");
 }
 
-// submits workout form
-document.getElementById("WorkoutForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-    submitExercise();
-});
+document.getElementById("WorkoutForm").addEventListener("submit", submitExercise);
