@@ -1,5 +1,8 @@
 ## React Login and Registration example with JWT and HttpOnly cookie
 
+NOTE: Need to install react rewired and add it's "scripts" to the package.json for this to work!  
+
+
 Build React JWT Authentication and Authorization example using React Hooks, React Router, Axios and Bootstrap (without Redux):
 - JWT Authentication Flow for User Signup & User Login
 - Project Structure for React Authentication (without Redux) with React Router & Axios

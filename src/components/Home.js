@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import UserService from "../services/user.service";
-import ExerciseRead from "./ExerciseRead.js";
 import TemplateSearch from "./TemplateSearch"; // Import the TemplateSearch component
+import ExerciseRead from './ExerciseRead'; // Import the updated ExerciseRead class
+import { getAllExercises } from "../services/IndexedDB";
 
 const Home = () => {
   const [content, setContent] = useState("");
@@ -74,11 +75,20 @@ const Home = () => {
       console.log("Selected Template from localStorage:", storedTemplate);
       localStorage.setItem("selectedTemplateId", storedTemplate.id);
       setFormId(storedTemplate.formId);
-
-
-
     } else {
       console.error("Template not found in localStorage for templateId:", template.id); // Debugging log
+    }
+  };
+
+  // Handler to fetch exercises and log them
+  const handleFetchExercises = async () => {
+    try {
+      const exercises = await getAllExercises();
+      const storedExArray = "storedExercises"; // Use a key for localStorage
+      ExerciseRead.readAll(storedExArray, exercises); // Call the static method on ExerciseRead
+      console.log("Exercises from IndexedDB:", exercises);
+    } catch (error) {
+      console.error("Error fetching exercises from IndexedDB:", error);
     }
   };
 
@@ -87,13 +97,23 @@ const Home = () => {
       <header className="jumbotron">
         <h3>{content}</h3>
       </header>
-        <div>
-        <ExerciseRead/>
-        </div>
+
+      {/* Pass the necessary prop for ExerciseRead */}
+      <div>
+        <ExerciseRead storedExArray="storedExercises" />
+      </div>
 
       <TemplateSearch templates={demoTemplates} onSelect={handleTemplateSelect} /> {/* Pass the demo templates */}
+
       {/* Render the dynamically imported HTML */}
       <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+
+      {/* Button to fetch exercises */}
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <button onClick={handleFetchExercises} style={{ padding: "10px 20px", fontSize: "16px" }}>
+          Fetch Exercises
+        </button>
+      </div>
     </div>
   );
 };

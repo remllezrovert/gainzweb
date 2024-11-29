@@ -72,4 +72,23 @@ export async function deleteFromIndexedDB(key) {
         transaction.oncomplete = () => resolve();
         transaction.onerror = (event) => reject(event.target.error);
     });
+
 }
+
+// Function to get all exercises from IndexedDB
+export async function getAllExercises() {
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, "readonly");
+        const store = transaction.objectStore(storeName);
+        const request = store.getAll();
+
+        request.onsuccess = (event) => {
+            resolve(event.target.result || []); // Return all records or an empty array if none exist
+        };
+
+        request.onerror = (event) => reject(event.target.error);
+    });
+}
+
+
