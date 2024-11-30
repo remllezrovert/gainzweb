@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserService from "../services/user.service";
-import TemplateSearch from "./TemplateSearch"; // Import the TemplateSearch component
-import ExerciseRead from './ExerciseRead'; // Import the updated ExerciseRead class
+import TemplateSearch from "./TemplateSearch";
+import ExerciseRead from './ExerciseRead';
 import { getAllExercises } from "../services/IndexedDB";
 
 const Home = () => {
@@ -9,15 +9,40 @@ const Home = () => {
   const [htmlContent, setHtmlContent] = useState("");
   const [formId, setFormId] = useState(null); // State to store the selected form ID
 
-  // Demo templates
-  const demoTemplates = [
-    { id: "9", formId: "1", title: "Strength Training Basics", summary: "Learn the fundamentals of strength training." },
-    { id: "8", formId: "1", title: "Advanced Weight Lifting", summary: "Techniques for advanced weight lifting." },
-    { id: "7", formId: "2", title: "Cardio Workouts", summary: "Effective cardio workouts for all levels." },
-    { id: "6", formId: "2", title: "High-Intensity Interval Training (HIIT)", summary: "A guide to HIIT exercises." },
-    { id: "5", formId: "3", title: "Yoga for Beginners", summary: "A beginner's guide to yoga practice." },
-    { id: "4", formId: "3", title: "Advanced Yoga Poses", summary: "Take your yoga practice to the next level." }
-  ];
+
+
+
+
+
+  //MOVE THIS SOMEWHERE ELSE IT SHOULD NOT BE HERE
+const getTemplatesFromLocalStorage = () => {
+  let templates = [];
+  // Iterate through each key in localStorage
+  for (let key in localStorage) {
+    if (key.startsWith('template_')) {
+      try {
+        // Parse the JSON string stored in localStorage
+        let template = JSON.parse(localStorage.getItem(key));
+        if (template && typeof template === 'object') {
+          templates.push(template);
+        }
+      } catch (error) {
+        console.error(`Error parsing template data for key ${key}:`, error);
+      }
+    }
+  }
+  return templates;
+};
+
+
+
+
+
+
+
+
+
+const demoTemplates = getTemplatesFromLocalStorage();
 
   useEffect(() => {
     // Save demoTemplates in localStorage

@@ -72,7 +72,6 @@ class ExerciseRead extends Component {
             localStorage.removeItem(storedExArray);
         }
 
-        // Remove from IndexedDB
         try {
             await deleteFromIndexedDB(exerciseToDelete.id);
             console.log(`Exercise with ID ${exerciseToDelete.id} removed from IndexedDB.`);

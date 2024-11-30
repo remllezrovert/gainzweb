@@ -52,7 +52,7 @@ const TemplateCreate = () => {
       formId: formId,
     };
 
-    const key = `e${templateId}`;
+    const key = `template_${templateId}`;
     localStorage.setItem(key, JSON.stringify(myTemplate));
 
     console.log("Template saved:", myTemplate);
