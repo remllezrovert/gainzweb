@@ -86,7 +86,7 @@ const Home = () => {
       const exercises = await getAllExercises();
       const storedExArray = "storedExercises"; // Use a key for localStorage
       ExerciseRead.readAll(storedExArray, exercises); // Call the static method on ExerciseRead
-      console.log("Exercises from IndexedDB:", exercises);
+      window.location.reload();
     } catch (error) {
       console.error("Error fetching exercises from IndexedDB:", error);
     }
@@ -94,26 +94,32 @@ const Home = () => {
 
   return (
     <div className="container">
-      <header className="jumbotron">
-        <h3>{content}</h3>
-      </header>
+
+      <TemplateSearch templates={demoTemplates} onSelect={handleTemplateSelect} /> {/* Pass the demo templates */}
+      {/* Render the dynamically imported HTML */}
+      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+
+
+
+      {/* Button to fetch exercises */}
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <button onClick={handleFetchExercises} style={{ padding: "10px 20px", fontSize: "16px" }}>
+          Reload Exercises
+        </button>
+      </div>
+
+
+
 
       {/* Pass the necessary prop for ExerciseRead */}
       <div>
         <ExerciseRead storedExArray="storedExercises" />
       </div>
 
-      <TemplateSearch templates={demoTemplates} onSelect={handleTemplateSelect} /> {/* Pass the demo templates */}
 
-      {/* Render the dynamically imported HTML */}
-      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
-      {/* Button to fetch exercises */}
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
-        <button onClick={handleFetchExercises} style={{ padding: "10px 20px", fontSize: "16px" }}>
-          Fetch Exercises
-        </button>
-      </div>
+
+
     </div>
   );
 };

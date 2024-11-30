@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getAllExercises } from '../services/IndexedDB';
+import { getAllExercises, deleteFromIndexedDB } from '../services/IndexedDB';
 
 class ExerciseRead extends Component {
     constructor(props) {
@@ -58,15 +58,26 @@ class ExerciseRead extends Component {
         }
     }
 
-    deleteExercise(index) {
+    async deleteExercise(index) {
         const { storedExArray } = this.props;
         const updatedExercises = [...this.state.exercises];
+        const exerciseToDelete = updatedExercises[index];
+
+        // Remove from localStorage
         updatedExercises.splice(index, 1);
         this.saveExercises(storedExArray, updatedExercises);
         this.setState({ exercises: updatedExercises });
 
         if (updatedExercises.length === 0) {
             localStorage.removeItem(storedExArray);
+        }
+
+        // Remove from IndexedDB
+        try {
+            await deleteFromIndexedDB(exerciseToDelete.id);
+            console.log(`Exercise with ID ${exerciseToDelete.id} removed from IndexedDB.`);
+        } catch (error) {
+            console.error('Error deleting exercise from IndexedDB:', error);
         }
     }
 

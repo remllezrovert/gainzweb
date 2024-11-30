@@ -4,31 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strength Workout</title>
+    <style>
+        .radio-group {
+            display: flex;
+            gap: 10px; /* Adjust space between radio buttons */
+            margin-bottom: 10px; /* Optional, for spacing */
+        }
+    </style>
 </head>
 <body>
 
-<h3>Strength Workout</h3>
 
 <form id="WorkoutForm">
     <input id="setRepsInput" type="text" placeholder="Reps"/>
-    <p>x</p>
     <input id="setWeightInput" type="text" placeholder="Weight"/>
     
-    <label for="Lb">lb</label>
-    <input type="radio" id="Lb" value="lb" name="weight">
-
-    <label for="Kg">kg</label>
-    <input type="radio" id="Kg" value="kg" name="weight">
-    <br><br>
+    <div class="radio-group">
+        <label for="Lb">lb</label>
+        <input type="radio" id="Lb" value="lb" name="weight">
+        <label for="Kg">kg</label>
+        <input type="radio" id="Kg" value="kg" name="weight">
+        <button type="button" onclick="setAddItem()" style="background-color: yellow;">Add set to Workout</button> 
+        <button type="submit">Submit Workout</button><br>
+    </div>
     
-    <button type="button" onclick="setAddItem()" style="background-color: yellow;">Add Strength Workout</button> 
-    <button type="submit">Submit Workout</button><br>
 </form>
 
-    <div id ="setItems">
-    </div>
+<div id="setItems"></div>
 
-    <script type="module" src="create.js"></script>
+<script type="module" src="create.js"></script>
 
 </body>
 </html>
