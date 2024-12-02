@@ -1,76 +1,57 @@
-//function to get exercises from localStorage
-function getExercises(storedExArray) {
+import React, { useEffect, useState } from "react";
+
+// Function to get exercises from localStorage
+const getExercises = (storedExArray) => {
     const storedExercises = localStorage.getItem(storedExArray);
     return storedExercises ? JSON.parse(storedExercises) : [];
-}
-  
-//function to save exercises to localStorage
-function saveExercises(storedExArray, updatedArray) {
+};
+
+// Function to save exercises to localStorage
+const saveExercises = (storedExArray, updatedArray) => {
     localStorage.setItem(storedExArray, JSON.stringify(updatedArray));
-}
+};
 
-//function to render exercises
-function renderExercises(storedExArray) {
-    const exerciseArray = getExercises(storedExArray); //get exercises from localStorage
-    const exerciseList = document.getElementById("exerciseList");
-    exerciseList.innerHTML = ""; //clear previous content
+const ExerciseRead = ({ storedExArray }) => {
+    const [exercises, setExercises] = useState(getExercises(storedExArray));
 
-    //sort exercises by date in ascending order
-    const sortedExercises = [...exerciseArray].sort((a, b) => new Date(a.date) - new Date(b.date));
+    // Function to delete an exercise
+    const deleteExercise = (index) => {
+        const updatedExercises = [...exercises];
+        updatedExercises.splice(index, 1);
+        saveExercises(storedExArray, updatedExercises);
+        setExercises(updatedExercises);
 
-    sortedExercises.forEach((exercise, index) => {
-        //create exercise container
-        const container = document.createElement("div");
-        container.classList.add("exercise-container");
-
-        //add date
-        const dateHeader = document.createElement("div");
-        dateHeader.classList.add("exercise-header");
-        dateHeader.textContent = `Date: ${exercise.date}`;
-        container.appendChild(dateHeader);
-
-        //add label
-        const labelHeader = document.createElement("div");
-        labelHeader.classList.add("label");
-        labelHeader.textContent = `${exercise.label}`;
-        container.appendChild(labelHeader);
-
-        //add content
-        const contentHeader = document.createElement("div");
-        contentHeader.textContent = "Sets:";
-        container.appendChild(contentHeader);
-
-        const contentList = document.createElement("ul");
-        contentList.classList.add("content-list");
-
-        const content = exercise.dataMap.content;
-        for (const [weight, reps] of Object.entries(content)) {
-            const listItem = document.createElement("li");
-            listItem.textContent = `${weight}: ${reps.join(", ")}`;
-            contentList.appendChild(listItem);
+        // If all exercises are deleted, remove the local storage item
+        if (updatedExercises.length === 0) {
+            localStorage.removeItem(storedExArray);
         }
+    };
 
-        container.appendChild(contentList);
+    // Sort exercises by date in ascending order
+    const sortedExercises = [...exercises].sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        //add delete button
-        const deleteButton = document.createElement("button");
-        deleteButton.classList.add("delete-button");
-        deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click", () => {
-            deleteExercise(index, sortedExercises, storedExArray);
-        });
-        container.appendChild(deleteButton);
+    return (
+        <div id="exerciseList">
+            {sortedExercises.map((exercise, index) => (
+                <div key={index} className="exercise-container">
+                    <div className="exercise-header">Date: {exercise.date}</div>
+                    <div className="label">{exercise.label}</div>
+                    <div>Sets:</div>
+                    <ul className="content-list">
+                        {Object.entries(exercise.dataMap.content).map(([weight, reps], i) => (
+                            <li key={i}>{`${weight}: ${reps.join(", ")}`}</li>
+                        ))}
+                    </ul>
+                    <button
+                        className="delete-button"
+                        onClick={() => deleteExercise(index)}
+                    >
+                        Delete
+                    </button>
+                </div>
+            ))}
+        </div>
+    );
+};
 
-        //append container to exercise list
-        exerciseList.appendChild(container);
-    });
-}
-
-function deleteExercise(index, array, storedExArray) {
-    array.splice(index, 1); //remove the exercise from the array
-    saveExercises(storedExArray, array); //save updated exercises to localStorage
-    renderExercises(storedExArray); //re-render the list
-    if(index === 0 && array.length == 1){
-        localStorage.removeItem(storedExArray);
-    } 
-}
+export default ExerciseRead;

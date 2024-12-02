@@ -13,9 +13,18 @@ import BoardUser from "./components/BoardUser";
 import BoardModerator from "./components/BoardModerator";
 import BoardAdmin from "./components/BoardAdmin";
 import Verification from "./components/Verification";
+import ExercisePage from "./components/ExercisePage";
+import TemplatePage from "./components/TemplatePage";
+import IndexedDB, { clearIndexedDB } from "./services/IndexedDB";
 
-// import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
+import { initDB } from './services/IndexedDB.js';
+
+import PrivateRoute from './components/PrivateRoute'; // Import the new PrivateRoute component
+
+initDB()
+    .then(() => console.log("LibreGainzIndexedDB initialized successfully"))
+    .catch((error) => console.error("Failed to initialize LibreGainzIndexedDB:", error));
 
 const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
@@ -42,11 +51,21 @@ const App = () => {
   }, []);
 
   const logOut = () => {
+    // Clear localStorage
+    localStorage.clear();
+    clearIndexedDB("LibreGainzIndexedDB")
+    
+    // Call AuthService to log the user out
     AuthService.logout();
+    
+    // Reset the state to reflect the user is logged out
     setShowModeratorBoard(false);
     setShowAdminBoard(false);
     setCurrentUser(undefined);
   };
+
+  // Check if userData exists in localStorage
+  const userData = localStorage.getItem('userData');
 
   return (
     <div>
@@ -60,6 +79,23 @@ const App = () => {
               Home
             </Link>
           </li>
+
+          {/* Conditionally render "Workout" and "Templates" if userData exists in localStorage */}
+          {userData && (
+            <>
+              <li className="nav-item">
+                <Link to={"/ExercisePage"} className="nav-link">
+                  Workout
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link to={"/TemplatePage"} className="nav-link">
+                  Templates
+                </Link>
+              </li>
+            </>
+          )}
 
           {showModeratorBoard && (
             <li className="nav-item">
@@ -109,7 +145,7 @@ const App = () => {
 
             <li className="nav-item">
               <Link to={"/Verification"} className="nav-link">
-                Varify
+                Verify
               </Link>
             </li>
 
@@ -118,8 +154,6 @@ const App = () => {
                 Sign Up
               </Link>
             </li>
-
-            
           </div>
         )}
       </nav>
@@ -134,11 +168,13 @@ const App = () => {
           <Route path="/user" element={<BoardUser />} />
           <Route path="/mod" element={<BoardModerator />} />
           <Route path="/admin" element={<BoardAdmin />} />
-          <Route path ="/verification" element={<Verification/>} />
+          <Route path="/verification" element={<Verification />} />
+
+          {/* Protected routes */}
+          <Route path="/ExercisePage" element={<PrivateRoute element={ExercisePage} />} />
+          <Route path="/TemplatePage" element={<PrivateRoute element={TemplatePage} />} />
         </Routes>
       </div>
-
-      {/* <AuthVerify logOut={logOut}/> */}
     </div>
   );
 };

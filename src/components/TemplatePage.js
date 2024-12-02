@@ -4,10 +4,9 @@ import ClientRepo from "../repo/ClientRepo";
 
 import TemplateCreate from "./TemplateCreate"; // Import the TemplateSearch component
 
-const Profile = () => {
+const TemplatePage = () => {
   const [userData, setUserData] = useState(null);
   const currentUser = AuthService.getCurrentUser();
-
 
   const handleTemplateSelect = (template) => {
     console.log("Selected Template:", template);
@@ -32,33 +31,15 @@ const Profile = () => {
   localStorage.setItem("userData", JSON.stringify(userData, null, 2));
 
   return (
+
     <div className="container">
 
 
-      <p>
-        <strong>Email:</strong> {currentUser.email}
-      </p>
 
-      <strong>Authorities:</strong>
-      <ul>
-        {currentUser.roles ? (
-          currentUser.roles.map((role, index) => <li key={index}>{role}</li>)
-        ) : (
-          <li>No roles found</li>
-        )}
-      </ul>
-
-      {userData ? (
-        <div>
-          <h4>Fetched User Data:</h4>
-          <pre>{JSON.stringify(userData, null, 2)}</pre>
-        </div>
-      ) : (
-        <div>Loading additional user data...</div>
-      )}
+      <TemplateCreate/>
 
     </div>
   );
 };
 
-export default Profile;
+export default TemplatePage;

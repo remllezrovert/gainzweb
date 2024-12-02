@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isometric Training Stopwatch</title>
+    <style>
+        .weight-container {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between the input and the radio buttons */
+        }
+
+        #weightInput {
+            width: 70px; /* Adjust the width of the weight input */
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="stopwatch">00:00:00:00</h1>
+    <button style="background-color: yellow;" onclick="startStopwatch()">Start</button>
+    <button style="background-color: yellow;" onclick="stopStopwatch()">Stop</button>
+    <button style="background-color: yellow;" onclick="resetStopwatch()">Reset</button>
+    <button id="lapBtn" style="background-color: yellow;" onclick="recordLap()">Lap</button>
+
+    <div class="weight-container">
+        <input id="weightInput" type="text" placeholder="Weight" required />
+        <label for="Kg">kg</label>
+        <input type="radio" id="Kg" value="Kg" name="weight">
+        <label for="Lb">lb</label>
+        <input type="radio" id="Lb" value="Lb" name="weight">
+    </div>
+
+
+
+    <ul id="Laps"></ul>
+    <button id="submitLapsBtn" style="background-color: green;">Submit Laps</button>
+
+    <script type="module" src="create.js"></script>
+</body>
+</html>

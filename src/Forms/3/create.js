@@ -1,4 +1,5 @@
-import Exercise from "../../model/Exercise.js";  // Import Exercise class for workout data handling
+import Exercise from "../../model/Exercise.js"; // Import Exercise class for workout data handling
+import { saveToIndexedDB } from "../../services/IndexedDB.js";
 
 let stopwatch = document.getElementById("stopwatch");
 let lapsContainer = document.getElementById("Laps");
@@ -34,14 +35,14 @@ function stopwatchTimer() {
 }
 
 function startStopwatch() {
-    const distanceUnit = getSelectedDistanceUnit();
-    if (!distanceUnit) {
-        alert("Please select a distance unit (Mi or Km) before starting the timer.");
+    const weightUnit = getSelectedWeightUnit();
+    if (!weightUnit) {
+        alert("Please select a weight unit (kg or lb) before starting the timer.");
         return;
     }
 
     if (!interval) {
-        interval = setInterval(stopwatchTimer, 10); // Update timer every 10ms
+        interval = setInterval(stopwatchTimer, 10);
         enableLapBtn();
     }
 }
@@ -63,8 +64,8 @@ function resetStopwatch() {
     lapsContainer.innerHTML = "";
 }
 
-function getSelectedDistanceUnit() {
-    const radioButtons = document.querySelectorAll('input[name="distance"]');
+function getSelectedWeightUnit() {
+    const radioButtons = document.querySelectorAll('input[name="weight"]');
     for (let i = 0; i < radioButtons.length; i++) {
         if (radioButtons[i].checked) {
             return radioButtons[i].value;
@@ -81,25 +82,25 @@ function recordLap() {
     const hundreths = lapTime % 100;
 
     const lapDisplay = `${padStart(hours)}:${padStart(minutes)}:${padStart(seconds)}:${padStart(hundreths)}`;
-    const distance = document.getElementById("distanceInput").value.trim();
-    const distanceUnit = getSelectedDistanceUnit();
+    const weight = document.getElementById("weightInput").value.trim();
+    const weightUnit = getSelectedWeightUnit();
 
-    if (!distance || isNaN(distance) || distance <= 0) {
-        alert("Please enter a valid positive number for the distance.");
+    if (!weight || isNaN(weight) || weight <= 0) {
+        alert("Please enter a valid positive number for the weight.");
         return;
     }
 
-    const distanceKey = `${distance}${distanceUnit}`;
+    const weightKey = `${weight}${weightUnit}`;
     const lapItem = document.createElement("li");
-    lapItem.dataset.distanceKey = distanceKey; // Attach the distance key for grouping later
-    lapItem.textContent = `${distanceKey} in ${lapDisplay}`;
+    lapItem.dataset.weightKey = weightKey; // Attach the weight key for grouping later
+    lapItem.textContent = `${weightKey} in ${lapDisplay}`;
     lapsContainer.appendChild(lapItem);
 
     lastLapTime = hundrethsElapsed; // Update the last lap time
 }
 
 // Function to submit laps
-const submitLaps = () => {
+const submitLaps = async () => {
     const lapItems = lapsContainer.getElementsByTagName("li");
     if (lapItems.length === 0) {
         alert("No laps to submit.");
@@ -107,26 +108,26 @@ const submitLaps = () => {
     }
 
     // Generate a unique exercise ID
-    let exerciseId = Math.floor(Math.random() * 100000); 
+    let exerciseId = Math.floor(Math.random() * 100000);
     let myExercise = new Exercise();
     myExercise.setId(exerciseId); // Set exercise ID
     myExercise.setClientId(0); // Default client ID
     myExercise.setTemplateId(0); // Default template ID
     myExercise.setDate(new Date().toISOString().split("T")[0]); // Set the date to today's date (YYYY-MM-DD)
 
-    // Create an object to hold laps grouped by distance
+    // Create an object to hold laps grouped by weight
     let lapsData = {};
 
-    // Iterate over lap items and group them by distance
+    // Iterate over lap items and group them by weight
     for (let i = 0; i < lapItems.length; i++) {
         const lapItem = lapItems[i];
-        const lapText = lapItem.textContent; // e.g., "7km in 00:00:00:67"
-        const [distanceKey, lapTime] = lapText.split(" in "); // Split to get distance and lap time
+        const lapText = lapItem.textContent; // e.g., "100kg in 00:00:00:67"
+        const [weightKey, lapTime] = lapText.split(" in "); // Split to get weight and lap time
 
-        if (!lapsData[distanceKey]) {
-            lapsData[distanceKey] = lapTime; // If this is the first lap for the distance, set it
+        if (!lapsData[weightKey]) {
+            lapsData[weightKey] = lapTime; // If this is the first lap for the weight, set it
         } else {
-            lapsData[distanceKey] += `, ${lapTime}`; // Otherwise, append the lap time to the existing entry
+            lapsData[weightKey] += `, ${lapTime}`; // Otherwise, append the lap time to the existing entry
         }
     }
 
@@ -137,36 +138,49 @@ const submitLaps = () => {
 
     // Add the remaining properties to the exercise object
     myExercise.setData("dataMap", dataMap);
-    myExercise.setDate(new Date().toISOString().split("T")[0]); // Set current date
 
-    // Save the exercise object to localStorage
-    let key = `e${exerciseId}`; // Generate a unique key for the exercise
-    localStorage.setItem(key, JSON.stringify({
-        id: exerciseId,
-        clientId: 0, // Default client ID
-        templateId: 0, // Default template ID
-        date: myExercise.getDate(),
-        dataMap: dataMap,
-    }));
+    const selectedTemplateId = localStorage.getItem("selectedTemplateId");
+    if (selectedTemplateId) {
+        myExercise.setTemplateId(parseInt(selectedTemplateId, 10)); // Ensure the templateId is a number
+    } else {
+        console.error("No templateId found in localStorage. Please select a template.");
+        return;
+    }
 
-    // Optional: Log the Exercise object and the stored data
-    console.log("Exercise object:", myExercise);
-    console.log("Saved to localStorage:", JSON.parse(localStorage.getItem(key)));
+    const currentUser = JSON.parse(localStorage.getItem("userData"));
+    if (currentUser){
+        myExercise.setClientId(currentUser.id);
+    } else {
+        console.error("No clientId found in localStorage.");
+        return;
+    }
 
-    // Reset the UI after submission
-    lapsContainer.innerHTML = ""; // Clear laps
-    hundrethsElapsed = 0; // Reset the timer
+    // Save to IndexedDB
+    try {
+        await saveToIndexedDB(exerciseId, {
+            id: exerciseId,
+            clientId: currentUser.id, // Default client ID
+            templateId: selectedTemplateId, // Default template ID
+            date: myExercise.getDate(),
+            dataMap: dataMap,
+        });
+        console.log("Exercise saved to IndexedDB:", myExercise);
+    } catch (error) {
+        console.error("Failed to save exercise to IndexedDB:", error);
+        alert("Failed to save exercise to IndexedDB.");
+    }
+
+    // Reset after submission
+    lapsContainer.innerHTML = "";
+    hundrethsElapsed = 0;
     lastLapTime = 0;
     setStopwatch();
 };
 
-// Attach the event listener for the submit button
-submitLapsBtn.addEventListener("click", submitLaps);
+document.getElementById("submitLapsBtn").addEventListener("click", submitLaps);
 
-// Initially disable the Lap button
 disableLapBtn();
 
-// Expose functions globally for button events
 window.startStopwatch = startStopwatch;
 window.stopStopwatch = stopStopwatch;
 window.resetStopwatch = resetStopwatch;

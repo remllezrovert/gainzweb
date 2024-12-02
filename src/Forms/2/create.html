@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardio Workout</title>
+    <style>
+        .distance-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between input and the radio buttons */
+        }
+
+        .distance-options {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between radio buttons */
+        }
+
+        #distanceInput {
+            width: 80px; /* Set the distance input to be 80 pixels wide */
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="stopwatch">00:00:00:00</h1>
+    <button style="background-color: yellow;" onclick="startStopwatch()">Start</button>
+    <button style="background-color: yellow;" onclick="stopStopwatch()">Stop</button>
+    <button style="background-color: yellow;" onclick="resetStopwatch()">Reset</button>
+    <button id="lapBtn" style="background-color: yellow;" onclick="recordLap()">Lap</button> <!-- Lap Button -->
+
+    <br/>
+    <div class="distance-wrapper">
+        <input id="distanceInput" type="text" placeholder="Distance" required/>
+        <div class="distance-options">
+            <label for="Km">km</label>
+            <input type="radio" id="Km" value="km" name="distance">
+            <label for="Mi">mi</label>
+            <input type="radio" id="Mi" value="mi" name="distance">
+        </div>
+    </div>
+
+    <div class="controls-container">
+        <button id="submitLapsBtn" style="background-color: green;">Submit Laps</button>
+    </div>
+
+    <ul id="Laps"></ul> <!-- Shows list of laps -->
+
+    <script type="module" src="create.js"></script>
+    
+</body>
+</html>

@@ -35,4 +35,5 @@ class Distance {
   distance.setValue(5.0);
   distance.setUnit(Unit.KM);
   console.log(distance.toString());  
-  
+ 
+  export default Distance;
