@@ -7,6 +7,7 @@ class ExerciseRead extends Component {
         this.state = {
             exercises: this.getExercises(props.storedExArray),
         };
+        this.handleFetchExercises = this.handleFetchExercises.bind(this); // Bind method to this
     }
 
     getExercises(storedExArray) {
@@ -55,6 +56,24 @@ class ExerciseRead extends Component {
             this.populateDemoExercises(storedExArray);
             this.setState({ exercises: this.getExercises(storedExArray) });
         }
+
+        // Fetch exercises on mount
+        this.handleFetchExercises();
+    }
+
+    // This method can be called from outside (e.g., from ExercisePage)
+    async handleFetchExercises() {
+        try {
+            const exercises = await getAllExercises();
+            const storedExArray = "storedExercises"; // Use a key for localStorage
+            await ExerciseRead.readAll(storedExArray, exercises); // Call the static method on ExerciseRead
+
+            // Update the component state to trigger re-render with new exercises
+            this.setState({ exercises: exercises });
+
+        } catch (error) {
+            console.error("Error fetching exercises from IndexedDB:", error);
+        }
     }
 
     async deleteExercise(index) {
@@ -89,52 +108,35 @@ class ExerciseRead extends Component {
                     {`
                         #exerciseList {
                             margin-top: 20px;
-                            padding: 10px;
-                            background-color: #f9f9f9;
-                            border-radius: 8px;
-                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                            font-family: Arial, sans-serif;
                         }
-
                         .exercise-container {
-                            margin-bottom: 15px;
+                            background-color: #fff;
                             padding: 15px;
-                            border: 1px solid #ddd;
-                            border-radius: 5px;
-                            background-color: #ffffff;
-                            transition: box-shadow 0.2s ease-in-out;
+                            margin-bottom: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                         }
-
-                        .exercise-container:hover {
-                            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-                        }
-
                         .exercise-header {
                             font-size: 18px;
                             font-weight: bold;
-                            color: #333;
-                            margin-bottom: 8px;
+                            margin-bottom: 10px;
                         }
-
                         .label {
-                            font-size: 16px;
+                            font-size: 14px;
                             font-weight: 500;
                             color: #555;
                             margin-bottom: 6px;
                         }
-
                         .content-list {
                             list-style: none;
                             padding: 0;
                             margin: 0 0 10px;
                         }
-
                         .content-list li {
                             font-size: 14px;
                             color: #666;
                             padding: 4px 0;
                         }
-
                         .delete-button {
                             padding: 8px 12px;
                             font-size: 14px;
@@ -145,7 +147,6 @@ class ExerciseRead extends Component {
                             cursor: pointer;
                             transition: background-color 0.2s ease-in-out;
                         }
-
                         .delete-button:hover {
                             background-color: #c0392b;
                         }

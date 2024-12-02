@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import UserService from "../services/user.service";
 import TemplateSearch from "./TemplateSearch";
 import ExerciseRead from './ExerciseRead';
-import { getAllExercises } from "../services/IndexedDB";
 
 const ExercisePage = () => {
   const [content, setContent] = useState("");
   const [htmlContent, setHtmlContent] = useState("");
   const [formId, setFormId] = useState(null); // State to store the selected form ID
+
+  const exerciseReadRef = useRef(null); // Ref to ExerciseRead component
 
   const getTemplatesFromLocalStorage = () => {
     let templates = [];
@@ -91,17 +92,10 @@ const ExercisePage = () => {
     }
   };
 
-  // Handler to fetch exercises and log them
-  const handleFetchExercises = async () => {
-    try {
-      const exercises = await getAllExercises();
-      const storedExArray = "storedExercises"; // Use a key for localStorage
-      await ExerciseRead.readAll(storedExArray, exercises); // Call the static method on ExerciseRead
-
-      window.location.reload();
-
-    } catch (error) {
-      console.error("Error fetching exercises from IndexedDB:", error);
+  // Function to refresh the exercises in ExerciseRead
+  const handleRefreshExercises = () => {
+    if (exerciseReadRef.current) {
+      exerciseReadRef.current.handleFetchExercises(); // Call the method to refresh the data
     }
   };
 
@@ -114,7 +108,7 @@ const ExercisePage = () => {
 
         {/* Refresh Button */}
         <button
-          onClick={handleFetchExercises}
+          onClick={handleRefreshExercises}
           style={{
             padding: "10px 20px",
             fontSize: "16px",
@@ -131,7 +125,7 @@ const ExercisePage = () => {
 
       {/* Pass the necessary prop for ExerciseRead */}
       <div>
-        <ExerciseRead storedExArray="storedExercises" />
+        <ExerciseRead ref={exerciseReadRef} storedExArray="storedExercises" />
       </div>
     </div>
   );
