@@ -4,9 +4,15 @@ import ClientRepo from "../repo/ClientRepo";
 
 import TemplateCreate from "./TemplateCreate"; // Import the TemplateSearch component
 
-const Profile = () => {
+const TemplatePage = () => {
   const [userData, setUserData] = useState(null);
   const currentUser = AuthService.getCurrentUser();
+
+  const templates = [
+    { id: 1, title: "ABCD", summary: "Summary for ABCD" },
+    { id: 2, title: "ABDE", summary: "Summary for ABDE" },
+    { id: 3, title: "ACDE", summary: "Summary for ACDE" },
+  ];
 
 
   const handleTemplateSelect = (template) => {
@@ -32,33 +38,15 @@ const Profile = () => {
   localStorage.setItem("userData", JSON.stringify(userData, null, 2));
 
   return (
+
     <div className="container">
 
 
-      <p>
-        <strong>Email:</strong> {currentUser.email}
-      </p>
 
-      <strong>Authorities:</strong>
-      <ul>
-        {currentUser.roles ? (
-          currentUser.roles.map((role, index) => <li key={index}>{role}</li>)
-        ) : (
-          <li>No roles found</li>
-        )}
-      </ul>
-
-      {userData ? (
-        <div>
-          <h4>Fetched User Data:</h4>
-          <pre>{JSON.stringify(userData, null, 2)}</pre>
-        </div>
-      ) : (
-        <div>Loading additional user data...</div>
-      )}
+      <TemplateCreate/>
 
     </div>
   );
 };
 
-export default Profile;
+export default TemplatePage;

@@ -143,7 +143,6 @@ async function submitExercise(event) {
 
     myExercise.dataMap = { content: dataMapContent };
 
-    // Ensure `id` is assigned to the Exercise object and verify it before saving
     if (!myExercise.id) {
         console.error("Exercise object does not have a valid id.");
         return;
