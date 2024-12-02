@@ -175,6 +175,22 @@ const submitLaps = async () => {
     hundrethsElapsed = 0;
     lastLapTime = 0;
     setStopwatch();
+
+
+    // Dispatch the custom event globally
+    const exerciseSubmitEvent = new CustomEvent('exerciseSubmit', {
+        detail: {
+            message: 'Workout successfully submitted',
+            exerciseId: myExercise.id,
+            dataMapContent: myExercise.dataMap
+        }
+    });
+
+    // Dispatch the custom event
+    document.dispatchEvent(exerciseSubmitEvent);  // Trigger the event globally
+
+
+
 };
 
 document.getElementById("submitLapsBtn").addEventListener("click", submitLaps);
