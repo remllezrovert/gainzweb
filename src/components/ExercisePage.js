@@ -9,40 +9,26 @@ const ExercisePage = () => {
   const [htmlContent, setHtmlContent] = useState("");
   const [formId, setFormId] = useState(null); // State to store the selected form ID
 
-
-
-
-
-
-  //MOVE THIS SOMEWHERE ELSE IT SHOULD NOT BE HERE
-const getTemplatesFromLocalStorage = () => {
-  let templates = [];
-  // Iterate through each key in localStorage
-  for (let key in localStorage) {
-    if (key.startsWith('template_')) {
-      try {
-        // Parse the JSON string stored in localStorage
-        let template = JSON.parse(localStorage.getItem(key));
-        if (template && typeof template === 'object') {
-          templates.push(template);
+  const getTemplatesFromLocalStorage = () => {
+    let templates = [];
+    // Iterate through each key in localStorage
+    for (let key in localStorage) {
+      if (key.startsWith('template_')) {
+        try {
+          // Parse the JSON string stored in localStorage
+          let template = JSON.parse(localStorage.getItem(key));
+          if (template && typeof template === 'object') {
+            templates.push(template);
+          }
+        } catch (error) {
+          console.error(`Error parsing template data for key ${key}:`, error);
         }
-      } catch (error) {
-        console.error(`Error parsing template data for key ${key}:`, error);
       }
     }
-  }
-  return templates;
-};
+    return templates;
+  };
 
-
-
-
-
-
-
-
-
-const demoTemplates = getTemplatesFromLocalStorage();
+  const demoTemplates = getTemplatesFromLocalStorage();
 
   useEffect(() => {
     // Save demoTemplates in localStorage
@@ -110,11 +96,9 @@ const demoTemplates = getTemplatesFromLocalStorage();
     try {
       const exercises = await getAllExercises();
       const storedExArray = "storedExercises"; // Use a key for localStorage
-      ExerciseRead.readAll(storedExArray, exercises); // Call the static method on ExerciseRead
+      await ExerciseRead.readAll(storedExArray, exercises); // Call the static method on ExerciseRead
 
       window.location.reload();
-      //useState() 
-      //use useState() to refresh component
 
     } catch (error) {
       console.error("Error fetching exercises from IndexedDB:", error);
@@ -123,32 +107,32 @@ const demoTemplates = getTemplatesFromLocalStorage();
 
   return (
     <div className="container">
+      {/* Align TemplateSearch and the refresh button side by side */}
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+        {/* TemplateSearch component */}
+        <TemplateSearch templates={demoTemplates} onSelect={handleTemplateSelect} style={{ flex: 1 }} />
 
-      <TemplateSearch templates={demoTemplates} onSelect={handleTemplateSelect} /> {/* Pass the demo templates */}
-      {/* Render the dynamically imported HTML */}
-      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-
-
-
-      {/* Button to fetch exercises */}
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
-        <button onClick={handleFetchExercises} style={{ padding: "10px 20px", fontSize: "16px" }}>
-          Reload Exercises
+        {/* Refresh Button */}
+        <button
+          onClick={handleFetchExercises}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            marginLeft: "10px", // space between search bar and button
+            cursor: "pointer"
+          }}
+        >
+          ⟳
         </button>
       </div>
 
-
-
+      {/* Render the dynamically imported HTML */}
+      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
       {/* Pass the necessary prop for ExerciseRead */}
       <div>
         <ExerciseRead storedExArray="storedExercises" />
       </div>
-
-
-
-
-
     </div>
   );
 };

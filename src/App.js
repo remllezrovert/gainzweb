@@ -53,7 +53,7 @@ const App = () => {
   const logOut = () => {
     // Clear localStorage
     localStorage.clear();
-    clearIndexedDB("exerciseData")
+    clearIndexedDB("LibreGainzIndexedDB")
     
     // Call AuthService to log the user out
     AuthService.logout();

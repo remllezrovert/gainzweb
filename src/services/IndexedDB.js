@@ -95,10 +95,9 @@ export async function getAllExercises() {
 
 
 }
-export function clearIndexedDB(dbName) {
-  // Open the database
-  const request = indexedDB.open(dbName);
 
+export async function clearIndexedDB(dbName) {
+  const request = indexedDB.open(dbName);
   request.onsuccess = (event) => {
     const db = event.target.result;
     
@@ -124,6 +123,7 @@ export function clearIndexedDB(dbName) {
   request.onerror = (event) => {
     console.error("Error opening the database:", event.target.error);
   };
+
 }
 
 
