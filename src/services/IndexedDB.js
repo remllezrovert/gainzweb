@@ -89,6 +89,41 @@ export async function getAllExercises() {
 
         request.onerror = (event) => reject(event.target.error);
     });
+
+
+
+
+
+}
+export function clearIndexedDB(dbName) {
+  // Open the database
+  const request = indexedDB.open(dbName);
+
+  request.onsuccess = (event) => {
+    const db = event.target.result;
+    
+    // Loop through all object stores and clear each one
+    for (let storeName of db.objectStoreNames) {
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
+
+      store.clear(); // Clear the object store
+
+      // Handle transaction completion
+      transaction.oncomplete = () => {
+        console.log(`Object store '${storeName}' cleared.`);
+      };
+
+      // Handle transaction error
+      transaction.onerror = (event) => {
+        console.error(`Error clearing object store '${storeName}':`, event.target.error);
+      };
+    }
+  };
+
+  request.onerror = (event) => {
+    console.error("Error opening the database:", event.target.error);
+  };
 }
 
 

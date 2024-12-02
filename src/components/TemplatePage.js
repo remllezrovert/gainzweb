@@ -8,13 +8,6 @@ const TemplatePage = () => {
   const [userData, setUserData] = useState(null);
   const currentUser = AuthService.getCurrentUser();
 
-  const templates = [
-    { id: 1, title: "ABCD", summary: "Summary for ABCD" },
-    { id: 2, title: "ABDE", summary: "Summary for ABDE" },
-    { id: 3, title: "ACDE", summary: "Summary for ACDE" },
-  ];
-
-
   const handleTemplateSelect = (template) => {
     console.log("Selected Template:", template);
   };

@@ -41,7 +41,6 @@ class ExerciseRead extends Component {
                 dataMap: {
                     content: {
                         "50 kg": [10, 8, 6],
-                        "60 kg": [8, 6, 5],
                     },
                 },
             },

@@ -3,6 +3,7 @@ import Form from "../model/Form.js";
 
 const FormSearch = ({ onFormSelect, searchTerm, setSearchTerm }) => {
   const [matchingForms, setMatchingForms] = useState([]);
+  const [selectedForm, setSelectedForm] = useState(null);  // State to track the selected form
 
   const forms = [
     new Form(1, "VGhpcyBpcyBhIHRlc3QgY29udGVudA==", "Strength"),
@@ -20,8 +21,17 @@ const FormSearch = ({ onFormSelect, searchTerm, setSearchTerm }) => {
   };
 
   const handleFormSelect = (form) => {
-    onFormSelect(form.id);
+    setSelectedForm(form); // Set the selected form
+    onFormSelect(form.id); // Call the parent callback
   };
+
+  useEffect(() => {
+    // Reorder the forms so the selected form moves to the top
+    if (selectedForm) {
+      const reorderedForms = [selectedForm, ...matchingForms.filter((form) => form.id !== selectedForm.id)];
+      setMatchingForms(reorderedForms);
+    }
+  }, [selectedForm, matchingForms]);
 
   return (
     <div>
@@ -37,12 +47,14 @@ const FormSearch = ({ onFormSelect, searchTerm, setSearchTerm }) => {
           {matchingForms.map((form) => (
             <li
               key={form.id}
-              onClick={() => handleFormSelect(form)}
+              onClick={() => handleFormSelect(form)} // Handle form selection
               style={{
                 cursor: "pointer",
                 padding: "5px",
                 borderBottom: "1px solid #ddd",
                 backgroundColor: "#f9f9f9",
+                border: selectedForm?.id === form.id ? "2px solid green" : "none", // Apply green border to selected form
+                fontWeight: selectedForm?.id === form.id ? "bold" : "normal", // Optional: Make selected form bold
               }}
             >
               {form.title} (ID: {form.id})

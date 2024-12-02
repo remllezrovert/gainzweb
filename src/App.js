@@ -15,6 +15,7 @@ import BoardAdmin from "./components/BoardAdmin";
 import Verification from "./components/Verification";
 import ExercisePage from "./components/ExercisePage";
 import TemplatePage from "./components/TemplatePage";
+import IndexedDB, { clearIndexedDB } from "./services/IndexedDB";
 
 import EventBus from "./common/EventBus";
 import { initDB } from './services/IndexedDB.js';
@@ -52,6 +53,7 @@ const App = () => {
   const logOut = () => {
     // Clear localStorage
     localStorage.clear();
+    clearIndexedDB("exerciseData")
     
     // Call AuthService to log the user out
     AuthService.logout();
