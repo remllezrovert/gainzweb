@@ -50,9 +50,12 @@ const ExercisePage = () => {
         setContent(_content);
       }
     );
+  }, []); // Empty dependency array to run this effect only once on mount
 
+  // Effect to dynamically load HTML and JS based on formId
+  useEffect(() => {
     if (formId) {
-      const loadHtml = async () => {
+      const loadHtmlAndScript = async () => {
         try {
           // Dynamically load the HTML file based on formId
           const htmlModule = await import(`../Forms/${formId}/create.html`);
@@ -65,7 +68,7 @@ const ExercisePage = () => {
 
           document.body.appendChild(script);
 
-          // Cleanup function to remove the script after the component is unmounted
+          // Cleanup function to remove the script after the component is unmounted or formId changes
           return () => {
             document.body.removeChild(script);
           };
@@ -74,9 +77,9 @@ const ExercisePage = () => {
         }
       };
 
-      loadHtml();
+      loadHtmlAndScript(); // Load HTML and JS every time formId changes
     }
-  }, [formId]); // Dependency array includes formId
+  }, [formId]); // Dependency array includes formId to reload whenever formId changes
 
   // Handler function for when a template is selected
   const handleTemplateSelect = (template) => {
@@ -86,7 +89,7 @@ const ExercisePage = () => {
     if (storedTemplate) {
       console.log("Selected Template from localStorage:", storedTemplate);
       localStorage.setItem("selectedTemplateId", storedTemplate.id);
-      setFormId(storedTemplate.formId);
+      setFormId(storedTemplate.formId); // Update formId which will trigger useEffect
     } else {
       console.error("Template not found in localStorage for templateId:", template.id); // Debugging log
     }
@@ -98,6 +101,21 @@ const ExercisePage = () => {
       exerciseReadRef.current.handleFetchExercises(); // Call the method to refresh the data
     }
   };
+
+  useEffect(() => {
+    const handleExerciseSubmit = (event) => {
+      console.log('exerciseSubmit event triggered!', event.detail);
+      handleRefreshExercises();
+      window.location.reload();
+    };
+
+    document.addEventListener('exerciseSubmit', handleExerciseSubmit);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('exerciseSubmit', handleExerciseSubmit);
+    };
+  }, []); // Empty dependency array to run this effect only once on mount
 
   return (
     <div className="container">

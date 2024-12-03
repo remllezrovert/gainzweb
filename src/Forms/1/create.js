@@ -114,9 +114,8 @@ async function submitExercise(event) {
         return;
     }
 
-
     const currentUser = JSON.parse(localStorage.getItem("userData"));
-    if (currentUser){
+    if (currentUser) {
         myExercise.setClientId(currentUser.id);
     } else {
         console.error("No clientId found in localStorage.");
@@ -159,8 +158,17 @@ async function submitExercise(event) {
     localStorage.removeItem(setItemsKey);
     setRenderItems();
 
-    console.log("Workout submitted!");
+
+    const exerciseSubmitEvent = new CustomEvent('exerciseSubmit', {
+        detail: {
+            message: 'Workout successfully submitted',
+            exerciseId: myExercise.id,
+            dataMapContent: myExercise.dataMap
+        }
+    });
+
+    document.dispatchEvent(exerciseSubmitEvent);
 }
 
-
 document.getElementById("WorkoutForm").addEventListener("submit", submitExercise);
+
