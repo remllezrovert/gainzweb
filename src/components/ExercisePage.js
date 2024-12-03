@@ -106,6 +106,7 @@ const ExercisePage = () => {
     const handleExerciseSubmit = (event) => {
       console.log('exerciseSubmit event triggered!', event.detail);
       handleRefreshExercises();
+      window.location.reload();
     };
 
     document.addEventListener('exerciseSubmit', handleExerciseSubmit);

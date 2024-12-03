@@ -188,9 +188,6 @@ const submitLaps = async () => {
 
     // Dispatch the custom event
     document.dispatchEvent(exerciseSubmitEvent);  // Trigger the event globally
-
-
-
 };
 
 document.getElementById("submitLapsBtn").addEventListener("click", submitLaps);
