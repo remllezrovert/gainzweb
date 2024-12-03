@@ -4,10 +4,7 @@ import UserService from "../services/user.service";
 const Home = () => {
   const [content, setContent] = useState("");
 
-
-
-
-
+  useEffect(() => {
     UserService.getPublicContent().then(
       (response) => {
         setContent(response.data);
@@ -20,27 +17,29 @@ const Home = () => {
         setContent(_content);
       }
     );
+  }, []);
+
   return (
     <div className="container">
-
-
-
-
       <h1>Hello! Welcome to LibreGainz</h1>
-      <p>
-        LiberGainz is a highly customizable workout app designed to be simple yet flexable. <br></br>
 
-      
+      {/* Render the image */}
+      <img 
+        src="/gainzTux.jpg" 
+        alt="Gainz Tux" 
+        style={{ maxWidth: "100%", height: "auto", marginTop: "20px" }} 
+      />
+
+
+      <p>
+        <li>LibreGainz is a highly customizable workout app designed to be simple yet flexible. <br /></li>
+        <li>In the future, users will be able to create their own workout forms.</li>
       </p>
 
-
-
-
-
-
-
-
     </div>
+
+
+
   );
 };
 

@@ -2,11 +2,15 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import ClientRepo from "../repo/ClientRepo";
 
-//const API_URL = "http://localhost:3000/api/auth/";
-const API_URL = "http://remllez.com:8081/auth/";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_URL = `${API_BASE_URL}/auth`;
+
+
+
 
 const register = (username, email, password) => {
-  return axios.post(API_URL + "signup", {
+  return axios.post(API_URL + "/signup", {
     username,
     email,
     password,
@@ -41,7 +45,7 @@ const register = (username, email, password) => {
 
 const login = (email, password) => {
   return axios
-    .post(API_URL + "login", { email, password })
+    .post(API_URL + "/login", { email, password })
     .then((response) => {
       if (response.data.token) {
         const user = jwtDecode(response.data.token);
@@ -69,7 +73,7 @@ const login = (email, password) => {
 
 const verify = (email, verificationCode) => {
   return axios
-    .post(API_URL + "verify", { email, verificationCode })
+    .post(API_URL + "/verify", { email, verificationCode })
     .then((response) => {
       // Handle the response as needed
       // For example, you might store the user data if verification logs the user in
@@ -90,7 +94,7 @@ const verify = (email, verificationCode) => {
 
 const logout = () => {
   localStorage.removeItem("user");
-  return axios.post(API_URL + "signout").then((response) => {
+  return axios.post(API_URL + "/signout").then((response) => {
     return response.data;
   });
 };
