@@ -27,9 +27,126 @@ initDB()
     .catch((error) => console.error("Failed to initialize LibreGainzIndexedDB:", error));
 
 const App = () => {
+
+
+
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
+
+
+  localStorage.setItem("template_1",
+    JSON.stringify({
+        "id": 1001,
+        "title": "Bench Press",
+        "dataType": "STRENGTH",
+        "summary": "Bench Press on a level bench using a barbell",
+        "clientId": 0,
+        "formId": 1
+    }))
+
+  localStorage.setItem("template_2",
+    JSON.stringify(
+    {
+        "id": 1002,
+        "title": "Squats",
+        "dataType": "STRENGTH",
+        "summary": "Perform squats using a barbell for resistance",
+        "clientId": 0,
+        "formId": 1
+    }))
+
+  localStorage.setItem("template_3",
+    JSON.stringify({
+        "id": 1003,
+        "title": "Running",
+        "dataType": "CARDIO",
+        "summary": "Run on a treadmill or outdoors for cardiovascular fitness",
+        "clientId": 0,
+        "formId": 2
+    }))
+
+  localStorage.setItem("template_4",
+    JSON.stringify(
+    {
+        "id": 1004,
+        "title": "Cycling",
+        "dataType": "CARDIO",
+        "summary": "Ride a stationary bike or outdoors to improve endurance",
+        "clientId": 0,
+        "formId": 2
+    }))
+
+  localStorage.setItem("template_5",
+    JSON.stringify(
+    {
+        "id": 1005,
+        "title": "Plank",
+        "dataType": "ISOMETRIC",
+        "summary": "Hold a plank position to strengthen core muscles",
+        "clientId": 0,
+        "formId": 3
+    }))
+
+  localStorage.setItem("template_6",
+
+    JSON.stringify(
+    {
+        "id": 1006,
+        "title": "Wall Sit",
+        "dataType": "ISOMETRIC",
+        "summary": "Perform a wall sit to strengthen leg muscles",
+        "clientId": 0,
+        "formId": 3
+    }))
+
+  localStorage.setItem("template_7",
+
+    JSON.stringify(
+    {
+        "id": 1007,
+        "title": "Deadlift",
+        "dataType": "STRENGTH",
+        "summary": "Lift a loaded barbell from the ground to the hips",
+        "clientId": 0,
+        "formId": 1
+    }))
+
+  localStorage.setItem("template_8",
+    JSON.stringify(
+    {
+        "id": 1008,
+        "title": "Rowing",
+        "dataType": "CARDIO",
+        "summary": "Use a rowing machine to improve cardiovascular and muscular fitness",
+        "clientId": 0,
+        "formId": 2
+    }))
+
+  localStorage.setItem("template_9",
+    JSON.stringify(
+    {
+        "id": 1009,
+        "title": "Lunges",
+        "dataType": "STRENGTH",
+        "summary": "Perform lunges with or without weights to strengthen legs",
+        "clientId": 0,
+        "formId": 1
+    }))
+
+  localStorage.setItem("template_10",
+    JSON.stringify(
+    {
+        "id": 1010,
+        "title": "Isometric Shoulder Hold",
+        "dataType": "ISOMETRIC",
+        "summary": "Hold weights at shoulder height without movement to build endurance",
+        "clientId": 0,
+        "formId": 3
+    }));
+
+
+
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();

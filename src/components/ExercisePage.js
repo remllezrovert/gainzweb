@@ -16,7 +16,6 @@ const ExercisePage = () => {
     for (let key in localStorage) {
       if (key.startsWith('template_')) {
         try {
-          // Parse the JSON string stored in localStorage
           let template = JSON.parse(localStorage.getItem(key));
           if (template && typeof template === 'object') {
             templates.push(template);
