@@ -7,6 +7,7 @@ const TemplateCreate = () => {
   const [summary, setSummary] = useState("");
   const [formSearchTerm, setFormSearchTerm] = useState("");
 
+  let formId = 0;
   // Handle form selection change from FormSearch
   const handleFormSelect = (formId) => {
     switch (formId) {
@@ -28,22 +29,21 @@ const TemplateCreate = () => {
     event.preventDefault();
 
     const templateId = Math.floor(Math.random() * 1000);
-
-    let formId;
-    switch (dataType) {
-      case "STRENGTH":
-        formId = 1;
-        break;
-      case "CARDIO":
-        formId = 2;
-        break;
-      case "ISOMETRIC":
-        formId = 3;
-        break;
-      default:
-        formId = 0;
-    }
-
+//let formId;
+//    switch (dataType) {
+//      case "STRENGTH":
+//        formId = 1;
+//        break;
+//      case "CARDIO":
+//        formId = 2;
+//        break;
+//      case "ISOMETRIC":
+//        formId = 3;
+//        break;
+//      default:
+//        formId = 0;
+//    }
+    
     const myTemplate = {
       title: title,
       dataType: dataType,

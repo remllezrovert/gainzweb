@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Logger</title>
+    <style>
+        .meal-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between input fields */
+        }
+
+        .meal-input {
+            display: flex;
+            gap: 10px; /* Space between label and input */
+        }
+
+        .meal-items {
+            margin-top: 20px;
+        }
+
+        button {
+            margin-top: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: darkgreen;
+        }
+    </style>
+</head>
+<body>
+    <h1>Meal Logger</h1>
+    <div class="meal-container">
+        <div class="meal-input">
+            <label for="mealDescription">Meal Description:</label>
+            <textarea id="mealDescription" rows="2" placeholder="Describe your meal..." required></textarea>
+        </div>
+        <div class="meal-input">
+            <label for="caloriesInput">Calories:</label>
+            <input id="caloriesInput" type="number" min="0" value="0" required>
+        </div>
+        <div class="meal-input">
+            <label for="carbsInput">Carbs (g):</label>
+            <input id="carbsInput" type="number" min="0" value="0" required>
+        </div>
+        <div class="meal-input">
+            <label for="sugarInput">Sugar (g):</label>
+            <input id="sugarInput" type="number" min="0" value="0" required>
+        </div>
+        <div class="meal-input">
+            <label for="proteinInput">Protein (g):</label>
+            <input id="proteinInput" type="number" min="0" value="0" required>
+        </div>
+        <button onclick="mealAddItem()">Add Meal</button>
+    </div>
+
+    <div class="meal-items" id="mealItems">
+        <!-- Logged meals will appear here -->
+    </div>
+
+    <script type="module" src="create.js"></script>
+</body>
+</html>

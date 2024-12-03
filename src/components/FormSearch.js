@@ -9,6 +9,7 @@ const FormSearch = ({ onFormSelect, searchTerm, setSearchTerm }) => {
     new Form(1, "VGhpcyBpcyBhIHRlc3QgY29udGVudA==", "Strength"),
     new Form(2, "QW5vdGhlciB0ZXN0IGNvbnRlbnQ=", "Cardio"),
     new Form(3, "U29tZSBtb3JlIHRlc3QgZGF0YQ==", "Isometric"),
+    new Form(4, "U29tZSBtb3JlIHRlc3QgZGF0YQ==", "Meal"),
   ];
 
   useEffect(() => {
